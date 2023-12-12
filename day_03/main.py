@@ -17,38 +17,42 @@ def read_file(filename: str) -> list[str]:
         return [line.replace("\n", "") for line in file.readlines()]
 
 
-def is_horizontally_adjacent(start_index: int, stop_index: int, current_line: str) -> bool:
-    """Checks if there's a symbol horizontally adjacent to a number at given indices.
+def is_horizontally_adjacent_symbol(number_start_index: int, number_stop_index: int, current_line: str) -> bool:
+    """Checks if there's a symbol adjacent to a number at given indices in the horizontal direction.
 
     Args:
-        start_index: First index of the number in the current line
-        stop_index: Last index of the number in the current line
+        number_start_index: First index of the number on the current line
+        number_stop_index: Last index of the number on the current line
         current_line: Line of the number being checked
 
     Returns:
         True if there's an adjacent symbol, False otherwise
     """
 
-    for index in (start_index, stop_index):
-        sign: int = 1 if index == start_index else -1
-        character: str = current_line[index + 1 * sign]
+    for index in (number_start_index, number_stop_index):
+        sign: int = 1 if index == number_start_index else -1
+        try:
+            # Can be out of bounds if a digit is the first/last element on the line
+            character: str = current_line[index + 1 * sign]
+        except IndexError:
+            continue
         if not (character.isdigit() and character == PERIOD):
             return True
 
     return False
 
 
-def is_vertically_adjacent(
-    start_index: int,
-    stop_index: int,
+def is_vertically_adjacent_symbol(
+    number_start_index: int,
+    number_stop_index: int,
     previous_line: Optional[str],
     next_line: Optional[str],
 ) -> bool:
-    """Checks if there's a symbol vertically or diagonally adjacent to a number at given indices.
+    """Checks if there's a symbol adjacent to a number at given indices in the vertical/diagonal direction.
 
     Args:
-        start_index: First index of the number on the current line
-        stop_index: Last index of the number on the current line
+        number_start_index: First index of the number on the current line
+        number_stop_index: Last index of the number on the current line
         previous_line: Line before the current line
         next_line: Line after the current line
 
@@ -57,11 +61,11 @@ def is_vertically_adjacent(
     """
 
     for line in (previous_line, next_line):
-        #
+        # A previous/next line may not exist -> skip to the next iteration
         if not line:
             continue
         # -1 and + 2 because we need to check for diagonally adjacent symbols, too
-        for index in range(start_index - 1, stop_index + 2):
+        for index in range(number_start_index - 1, number_stop_index + 2):
             try:
                 # Can be out of bounds if a digit is the first/last element on the line
                 character: str = line[index]
@@ -75,43 +79,35 @@ def is_vertically_adjacent(
 
 
 def is_number_adjacent_to_symbol(
-    start_index: int,
-    stop_index: int,
+    number_start_index: int,
+    number_stop_index: int,
     current_line: str,
     previous_line: Optional[str],
     next_line: Optional[str],
 ) -> bool:
-    """Performs checks of a symbol adjacent to a number at given indices.
+    """Checks if a symbol is adjacent to a number at given indices in any directions.
 
     Args:
-        start_index: First index of the number on the current line
-        stop_index: Last index of the number on the current line
+        number_start_index: First index of the number on the current line
+        number_stop_index: Last index of the number on the current line
         current_line: Line of the number being checked
         previous_line: Line before the current line
         next_line: Line after the current line
 
     Returns:
-
+        True if there's an adjacent symbol in any of the directions, False otherwise
     """
 
-    # Horizontal check
-    if is_horizontally_adjacent(
-        start_index=start_index,
-        stop_index=stop_index,
+    return is_horizontally_adjacent_symbol(
+        number_start_index=number_start_index,
+        number_stop_index=number_stop_index,
         current_line=current_line,
-    ):
-        return True
-
-    # Vertical/diagonal check
-    if is_vertically_adjacent(
-        start_index=start_index,
-        stop_index=stop_index,
+    ) or is_vertically_adjacent_symbol(
+        number_start_index=number_start_index,
+        number_stop_index=number_stop_index,
         previous_line=previous_line,
         next_line=next_line,
-    ):
-        return True
-
-    return False
+    )
 
 
 def main() -> None:
@@ -127,7 +123,7 @@ def main() -> None:
             if character.isdigit():
                 digits.append(character)
             if not line[character_index + 1].isdigit() and digits:
-                start_index: int = character_index - (len(digits) - 1)
+                number_start_index: int = character_index - (len(digits) - 1)
                 current_line: str = line
                 previous_line: Optional[str] = None
                 next_line: Optional[str] = None
@@ -145,8 +141,8 @@ def main() -> None:
                     pass
 
                 if is_number_adjacent_to_symbol(
-                    start_index=start_index,
-                    stop_index=character_index,
+                    number_start_index=number_start_index,
+                    number_stop_index=character_index,
                     current_line=current_line,
                     previous_line=previous_line,
                     next_line=next_line,
