@@ -18,7 +18,16 @@ def read_file(filename: str) -> list[str]:
 
 
 def is_horizontally_adjacent(start_index: int, stop_index: int, current_line: str) -> bool:
-    """"""
+    """Checks if there's a symbol horizontally adjacent to a number at given indices.
+
+    Args:
+        start_index: First index of the number in the current line
+        stop_index: Last index of the number in the current line
+        current_line: Line of the number being checked
+
+    Returns:
+        True if there's an adjacent symbol, False otherwise
+    """
 
     for index in (start_index, stop_index):
         sign: int = 1 if index == start_index else -1
@@ -35,13 +44,30 @@ def is_vertically_adjacent(
     previous_line: Optional[str],
     next_line: Optional[str],
 ) -> bool:
-    """"""
+    """Checks if there's a symbol vertically or diagonally adjacent to a number at given indices.
+
+    Args:
+        start_index: First index of the number on the current line
+        stop_index: Last index of the number on the current line
+        previous_line: Line before the current line
+        next_line: Line after the current line
+
+    Returns:
+        True if there's an adjacent symbol, False otherwise
+    """
 
     for line in (previous_line, next_line):
+        #
         if not line:
             continue
+        # -1 and + 2 because we need to check for diagonally adjacent symbols, too
         for index in range(start_index - 1, stop_index + 2):
-            character: str = line[index]
+            try:
+                # Can be out of bounds if a digit is the first/last element on the line
+                character: str = line[index]
+            except IndexError:
+                continue
+
             if not (character.isdigit() and character == PERIOD):
                 return True
 
@@ -55,7 +81,18 @@ def is_number_adjacent_to_symbol(
     previous_line: Optional[str],
     next_line: Optional[str],
 ) -> bool:
-    """"""
+    """Performs checks of a symbol adjacent to a number at given indices.
+
+    Args:
+        start_index: First index of the number on the current line
+        stop_index: Last index of the number on the current line
+        current_line: Line of the number being checked
+        previous_line: Line before the current line
+        next_line: Line after the current line
+
+    Returns:
+
+    """
 
     # Horizontal check
     if is_horizontally_adjacent(
@@ -78,10 +115,11 @@ def is_number_adjacent_to_symbol(
 
 
 def main() -> None:
-    """"""
+    """Prints the sum of all the part numbers in the engine schematic."""
 
     lines: list[str] = read_file(filename="puzzle_input.txt")
 
+    part_numbers_sum: int = 0
     digits: list[str] = []
 
     for line_index, line in enumerate(lines):
@@ -94,14 +132,14 @@ def main() -> None:
                 previous_line: Optional[str] = None
                 next_line: Optional[str] = None
 
-                # Will fail for the first line
                 try:
+                    # Will fail for the first line
                     previous_line = lines[line_index - 1]
                 except IndexError:
                     pass
 
-                # Will fail for the last line
                 try:
+                    # Will fail for the last line
                     next_line = lines[line_index + 1]
                 except IndexError:
                     pass
@@ -113,9 +151,11 @@ def main() -> None:
                     previous_line=previous_line,
                     next_line=next_line,
                 ):
-                    pass
+                    part_numbers_sum += int("".join(digits))
 
                 digits = []
+
+    print(f"Part numbers sum: {part_numbers_sum}")
 
 
 if __name__ == "__main__":
