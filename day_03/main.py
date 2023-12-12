@@ -44,12 +44,9 @@ def is_horizontally_adjacent_symbol(number_start_index: int, number_stop_index: 
         True if there's an adjacent symbol, False otherwise
     """
 
-    for index in (number_start_index, number_stop_index):
-        sign: int = 1 if index == number_start_index else -1
-        try:
-            # Can be out of bounds if a digit is the first/last element on the line
-            character: str = current_line[index + 1 * sign]
-        except IndexError:
+    for index in (number_start_index - 1, number_stop_index + 1):
+        # Can be out of bounds if a digit is the first/last element on the line
+        if index < 0 or index > (len(current_line) - 1):
             continue
 
         if is_symbol_at_index(line=current_line, index=index):
@@ -82,10 +79,8 @@ def is_vertically_adjacent_symbol(
             continue
         # -1 and + 2 because we need to check for diagonally adjacent symbols, too
         for index in range(number_start_index - 1, number_stop_index + 2):
-            try:
-                # Can be out of bounds if a digit is the first/last element on the line
-                character: str = line[index]
-            except IndexError:
+            # Can be out of bounds if a digit is the first/last element on the line
+            if index < 0 or index > len(line) - 1:
                 continue
 
             if is_symbol_at_index(line=line, index=index):
@@ -135,26 +130,15 @@ def main() -> None:
     digits: list[str] = []
 
     for line_index, line in enumerate(lines):
+        current_line: str = line
+        previous_line: Optional[str] = lines[line_index - 1] if line_index != 0 else None
+        next_line: Optional[str] = lines[line_index + 1] if line_index != (len(lines) - 1) else None
+
         for character_index, character in enumerate(line):
             if character.isdigit():
                 digits.append(character)
-            if not line[character_index + 1].isdigit() and digits:
+            if (character_index == len(line) - 1 or not line[character_index + 1].isdigit()) and digits:
                 number_start_index: int = character_index - (len(digits) - 1)
-                current_line: str = line
-                previous_line: Optional[str] = None
-                next_line: Optional[str] = None
-
-                try:
-                    # Will fail for the first line
-                    previous_line = lines[line_index - 1]
-                except IndexError:
-                    pass
-
-                try:
-                    # Will fail for the last line
-                    next_line = lines[line_index + 1]
-                except IndexError:
-                    pass
 
                 if is_number_adjacent_to_symbol(
                     number_start_index=number_start_index,
