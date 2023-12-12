@@ -17,6 +17,21 @@ def read_file(filename: str) -> list[str]:
         return [line.replace("\n", "") for line in file.readlines()]
 
 
+def is_symbol_at_index(line: str, index: int) -> bool:
+    """Checks if a character at a given index is a valid symbol.
+
+    Args:
+        line: Line containing the character to be checked
+        index: Index of the character on the line
+
+    Returns:
+        True if the character is a valid symbol, False otherwise
+    """
+
+    character: str = line[index]
+    return not character.isdigit() and not character == PERIOD
+
+
 def is_horizontally_adjacent_symbol(number_start_index: int, number_stop_index: int, current_line: str) -> bool:
     """Checks if there's a symbol adjacent to a number at given indices in the horizontal direction.
 
@@ -36,7 +51,8 @@ def is_horizontally_adjacent_symbol(number_start_index: int, number_stop_index: 
             character: str = current_line[index + 1 * sign]
         except IndexError:
             continue
-        if not (character.isdigit() and character == PERIOD):
+
+        if is_symbol_at_index(line=current_line, index=index):
             return True
 
     return False
@@ -72,7 +88,7 @@ def is_vertically_adjacent_symbol(
             except IndexError:
                 continue
 
-            if not (character.isdigit() and character == PERIOD):
+            if is_symbol_at_index(line=line, index=index):
                 return True
 
     return False
