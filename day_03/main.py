@@ -151,7 +151,7 @@ def main() -> None:
 
                 digits = []
 
-    print(f"Part numbers sum: {part_numbers_sum}")
+    print(part_numbers_sum)
 
 
 if __name__ == "__main__":
