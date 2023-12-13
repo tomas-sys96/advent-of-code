@@ -14,7 +14,7 @@ class SymbolDetector:
         next_line: Line after the current line
     """
 
-    _instance = None
+    _instance: Optional["SymbolDetector"] = None
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -44,7 +44,7 @@ class SymbolDetector:
             index: Index of the character on the line
 
         Returns:
-            True if the character is a valid symbol, False otherwise
+            True if the character is a valid symbol (e.g. /, #, +, * etc.), False otherwise
         """
 
         character: str = line[index]
