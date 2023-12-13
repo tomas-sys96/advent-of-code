@@ -43,7 +43,7 @@ def main() -> None:
                     next_line=next_line,
                 )
 
-                if symbol_detector.is_number_next_to_symbol():
+                if symbol_detector.is_symbol_next_to_number():
                     part_numbers_sum += int("".join(digits))
 
                 digits = []

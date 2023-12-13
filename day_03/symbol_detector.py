@@ -36,7 +36,7 @@ class SymbolDetector:
         self.next_line: Optional[str] = next_line
 
     @staticmethod
-    def is_symbol_at_index(line: str, index: int) -> bool:
+    def _is_symbol_at_index(line: str, index: int) -> bool:
         """Checks if a character at a given index is a valid symbol.
 
         Args:
@@ -50,7 +50,7 @@ class SymbolDetector:
         character: str = line[index]
         return not character.isdigit() and not character == PERIOD
 
-    def is_number_next_to_symbol_horizontally(self) -> bool:
+    def _is_symbol_next_to_number_horizontally(self) -> bool:
         """Checks if there's a symbol adjacent to a number at given indices in the horizontal direction.
 
         Returns:
@@ -62,12 +62,12 @@ class SymbolDetector:
             if index < 0 or index > (len(self.current_line) - 1):
                 continue
 
-            if self.is_symbol_at_index(line=self.current_line, index=index):
+            if self._is_symbol_at_index(line=self.current_line, index=index):
                 return True
 
         return False
 
-    def is_number_next_to_symbol_vertically(self) -> bool:
+    def _is_symbol_next_to_number_vertically(self) -> bool:
         """Checks if there's a symbol adjacent to a number at given indices in the vertical/diagonal direction.
 
         Returns:
@@ -84,16 +84,16 @@ class SymbolDetector:
                 if index < 0 or index > len(line) - 1:
                     continue
 
-                if self.is_symbol_at_index(line=line, index=index):
+                if self._is_symbol_at_index(line=line, index=index):
                     return True
 
         return False
 
-    def is_number_next_to_symbol(self) -> bool:
+    def is_symbol_next_to_number(self) -> bool:
         """Checks if a symbol is adjacent to a number at given indices in any directions.
 
         Returns:
             True if there's an adjacent symbol in any of the directions, False otherwise
         """
 
-        return self.is_number_next_to_symbol_horizontally() or self.is_number_next_to_symbol_vertically()
+        return self._is_symbol_next_to_number_horizontally() or self._is_symbol_next_to_number_vertically()
