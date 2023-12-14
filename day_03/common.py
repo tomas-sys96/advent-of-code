@@ -1,12 +1,12 @@
-def read_file(filename: str) -> list[str]:
-    """Reads a text file in the current directory and returns its contents as a list of strings.
+def read_file(file_path: str) -> list[str]:
+    """Reads a text file and returns its contents as a list of strings.
 
     Args:
-        filename: Name of the text file to be read
+        file_path: Path to the text file to be read
 
     Returns:
         Text file represented as a list of strings
     """
 
-    with open(file=filename, mode="r") as file:
+    with open(file=file_path, mode="r") as file:
         return [line.replace("\n", "") for line in file.readlines()]

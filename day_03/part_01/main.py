@@ -4,10 +4,13 @@ from day_03.common import read_file
 from symbol_detector import SymbolDetector
 
 
+FILE_PATH: str = "../puzzle_input.txt"
+
+
 def main() -> None:
     """Prints the sum of all the part numbers in the engine schematic."""
 
-    lines: list[str] = read_file(filename="../puzzle_input.txt")
+    lines: list[str] = read_file(file_path=FILE_PATH)
 
     part_numbers_sum: int = 0
     digits: list[str] = []
