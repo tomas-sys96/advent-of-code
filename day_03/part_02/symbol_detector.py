@@ -1,0 +1,4 @@
+class SymbolDetector:
+    """"""
+
+    pass

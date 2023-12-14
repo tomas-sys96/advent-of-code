@@ -1,11 +1,13 @@
 from typing import Optional
+
+from day_03.common import read_file
 from symbol_detector import SymbolDetector
 
 
 def main() -> None:
     """Prints the sum of all the part numbers in the engine schematic."""
 
-    lines: list[str] = read_file(filename="puzzle_input.txt")
+    lines: list[str] = read_file(filename="../puzzle_input.txt")
 
     part_numbers_sum: int = 0
     digits: list[str] = []
@@ -21,7 +23,7 @@ def main() -> None:
             if (character_index == len(line) - 1 or not line[character_index + 1].isdigit()) and digits:
                 number_start_index: int = character_index - (len(digits) - 1)
 
-                symbol_detector: SymbolDetector = SymbolDetector(
+                detector: SymbolDetector = SymbolDetector(
                     number_start_index=number_start_index,
                     number_stop_index=character_index,
                     current_line=current_line,
@@ -29,7 +31,7 @@ def main() -> None:
                     next_line=next_line,
                 )
 
-                if symbol_detector.is_symbol_next_to_number():
+                if detector.is_symbol_next_to_number():
                     part_numbers_sum += int("".join(digits))
 
                 digits = []
