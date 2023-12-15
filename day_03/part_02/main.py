@@ -1,19 +1,9 @@
 from typing import Optional
 
-from day_03.common import read_file, Number, Symbol, SymbolDataStorage
+from day_03.common import read_file, Number, Symbol, SymbolDataStorage, get_adjacent_lines
 from symbol_detector import SymbolDetector
 
 FILE_PATH: str = "../puzzle_input.txt"
-
-
-def get_adjacent_lines(line_index: int, lines: list[str]) -> tuple[Optional[str], Optional[str]]:
-    """"""
-
-    # There's no "previous"/"next" line for the first/last line
-    previous_line: Optional[str] = lines[line_index - 1] if line_index != 0 else None
-    next_line: Optional[str] = lines[line_index + 1] if line_index != (len(lines) - 1) else None
-
-    return previous_line, next_line
 
 
 def main() -> None:

@@ -1,7 +1,7 @@
 from collections import namedtuple
 from dataclasses import dataclass
-from typing import Optional, Type
 from math import prod
+from typing import Optional, Type
 
 SymbolData: Type[tuple] = namedtuple(typename="SymbolData", field_names=["index", "adjacent_numbers"])
 
@@ -13,8 +13,8 @@ class Number:
     stop_index: int
     line_index: int
     line: str
-    previous_line: Optional[str] = None
-    next_line: Optional[str] = None
+    previous_line: Optional[str]
+    next_line: Optional[str]
 
 
 @dataclass
@@ -96,3 +96,13 @@ def read_file(file_path: str) -> list[str]:
 
     with open(file=file_path, mode="r") as file:
         return [line.replace("\n", "") for line in file.readlines()]
+
+
+def get_adjacent_lines(line_index: int, lines: list[str]) -> tuple[Optional[str], Optional[str]]:
+    """"""
+
+    # There's no "previous"/"next" line for the first/last line
+    previous_line: Optional[str] = lines[line_index - 1] if line_index != 0 else None
+    next_line: Optional[str] = lines[line_index + 1] if line_index != (len(lines) - 1) else None
+
+    return previous_line, next_line
