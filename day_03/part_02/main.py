@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Optional, Type
+from collections import namedtuple
 
-from day_03.common import read_file, Number, Symbol
+from day_03.common import read_file, Number
 from symbol_detector import SymbolDetector
 
 FILE_PATH: str = "../test_input.txt"
@@ -23,6 +24,9 @@ def main() -> None:
     gear_ratios_sum: int = 0
     digits: list[str] = []
 
+    SymbolData: Type[tuple] = namedtuple(typename="SymbolData", field_names=["index", "adjacent_numbers"])
+    detected_symbols: dict = {}
+
     for line_index, line in enumerate(lines):
         # There's no "previous"/"next" line for the first/last line
         previous_line: Optional[str]
@@ -34,6 +38,7 @@ def main() -> None:
                 digits.append(character)
             if (character_index == len(line) - 1 or not line[character_index + 1].isdigit()) and digits:
                 number: Number = Number(
+                    value=int("".join([*digits])),
                     start_index=character_index - (len(digits) - 1),
                     stop_index=character_index,
                     line_index=line_index,
@@ -44,12 +49,40 @@ def main() -> None:
                 detector: SymbolDetector = SymbolDetector(number=number)
 
                 if detector.is_symbol_next_to_number():
+                    # Get the previous and next lines of the line on which the current symbol is
                     detector.symbol.update_lines(
                         *get_adjacent_lines(
                             line_index=detector.symbol.line_index,
                             lines=lines,
                         )
                     )
+
+                    # detected_symbols = {
+                    #     line_index_0: [
+                    #         SymbolData(index=index_0, adjacent_numbers=[936, 672]),
+                    #         SymbolData(index=index_1, adjacent_numbers=[4, 24]),
+                    #     ],
+                    #     line_index_1: [
+                    #         SymbolData(index=index_0, adjacent_numbers=[390, 425]),
+                    #     ],
+                    # }
+
+                    try:
+                        # Attempt to append the symbol data to a line index key
+                        detected_symbols[detector.symbol.line_index].append(
+                            SymbolData(
+                                index=detector.symbol.index,
+                                adjacent_numbers=[number.value],
+                            ),
+                        )
+                    except KeyError:
+                        # If there isn't such line index key, add it in
+                        detected_symbols[detector.symbol.line_index] = [
+                            SymbolData(
+                                index=detector.symbol.index,
+                                adjacent_numbers=[number.value],
+                            ),
+                        ]
 
                 digits = []
 

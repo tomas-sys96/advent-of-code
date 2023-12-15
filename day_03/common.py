@@ -4,6 +4,7 @@ from typing import Optional
 
 @dataclass
 class Number:
+    value: int
     start_index: int
     stop_index: int
     line_index: int
