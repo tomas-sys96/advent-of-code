@@ -1,5 +1,7 @@
 from typing import Optional
 
+from day_03.common import Number, Symbol
+
 PERIOD: str = "."
 
 
@@ -7,93 +9,77 @@ class SymbolDetector:
     """Class for detecting symbols adjacent to a number at given indices.
 
     Attributes:
-        number_start_index: First index of the number on the current line
-        number_stop_index: Last index of the number on the current line
-        current_line: Line of the number being checked
-        previous_line: Line before the current line
-        next_line: Line after the current line
+        number: Number at a given line and indices
     """
 
     _instance: Optional["SymbolDetector"] = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> "SymbolDetector":
         if not cls._instance:
             cls._instance = super(SymbolDetector, cls).__new__(cls)
         return cls._instance
 
-    def __init__(
-        self,
-        number_start_index: int,
-        number_stop_index: int,
-        current_line: str,
-        previous_line: Optional[str],
-        next_line: Optional[str],
-    ) -> None:
-        self.number_start_index: int = number_start_index
-        self.number_stop_index: int = number_stop_index
-        self.current_line: str = current_line
-        self.previous_line: Optional[str] = previous_line
-        self.next_line: Optional[str] = next_line
+    def __init__(self, number: Number) -> None:
+        self.number: Number = number
 
     @staticmethod
-    def _is_symbol_at_index(line: str, index: int) -> bool:
-        """Checks if a character at a given index is a valid symbol.
+    def _is_symbol(character: str) -> bool:
+        """Checks if a character is a valid symbol.
 
         Args:
-            line: Line containing the character to be checked as a symbol
-            index: Index of the character on the line
+            character: Character to be validated as an asterisk symbol
 
         Returns:
             True if the character is a valid symbol (e.g. /, #, +, * etc.), False otherwise
         """
 
-        character: str = line[index]
         return not character.isdigit() and not character == PERIOD
 
-    def _is_symbol_next_to_number_horizontally(self) -> bool:
-        """Checks if there's a symbol adjacent to a number at given indices in the horizontal direction.
+    def _find_symbol_next_to_number_horizontally(self) -> Optional[Symbol]:
+        """Checks for a symbol adjacent to the current number in the horizontal direction.
 
         Returns:
-            True if there's an adjacent symbol, False otherwise
+            Symbol object if there is a symbol next to the number, None otherwise
         """
 
-        for index in (self.number_start_index - 1, self.number_stop_index + 1):
+        for index in (self.number.start_index - 1, self.number.stop_index + 1):
             # Can be out of bounds if a digit is the first/last element on the line
-            if index < 0 or index > (len(self.current_line) - 1):
+            if index < 0 or index > (len(self.number.line) - 1):
                 continue
 
-            if self._is_symbol_at_index(line=self.current_line, index=index):
-                return True
+            if self._is_symbol(character=self.number.line[index]):
+                return Symbol(index=index, line_index=self.number.line_index)
 
-        return False
-
-    def _is_symbol_next_to_number_vertically(self) -> bool:
-        """Checks if there's a symbol adjacent to a number at given indices in the vertical/diagonal direction.
+    def _find_symbol_next_to_number_vertically(self) -> Optional[Symbol]:
+        """Checks for a symbol adjacent to the current number in the vertical/diagonal direction.
 
         Returns:
-            True if there's an adjacent symbol, False otherwise
+            Symbol object if there is a symbol next to the number, None otherwise
         """
 
-        for line in (self.previous_line, self.next_line):
+        for line in (self.number.previous_line, self.number.next_line):
             # A previous/next line may not exist -> skip to the next iteration
             if not line:
                 continue
+            # Get the current line's index so that we know on which line to find the symbol
+            line_index: int = (
+                self.number.line_index - 1 if line is self.number.previous_line else self.number.line_index + 1
+            )
+
             # -1 and + 2 because we need to check for diagonally adjacent symbols, too
-            for index in range(self.number_start_index - 1, self.number_stop_index + 2):
+            for index in range(self.number.start_index - 1, self.number.stop_index + 2):
                 # Can be out of bounds if a digit is the first/last element on the line
                 if index < 0 or index > len(line) - 1:
                     continue
 
-                if self._is_symbol_at_index(line=line, index=index):
-                    return True
+                if self._is_symbol(character=line[index]):
+                    return Symbol(index=index, line_index=line_index)
 
-        return False
-
-    def is_symbol_next_to_number(self) -> bool:
-        """Checks if a symbol is adjacent to a number at given indices in any directions.
+    def find_symbol_next_to_number(self) -> Optional[Symbol]:
+        """Checks for a symbol adjacent to the current number.
 
         Returns:
-            True if there's an adjacent symbol in any of the directions, False otherwise
+            Symbol object if there is a symbol next to the number, None otherwise
         """
 
-        return self._is_symbol_next_to_number_horizontally() or self._is_symbol_next_to_number_vertically()
+        return self._find_symbol_next_to_number_horizontally() or self._find_symbol_next_to_number_vertically()

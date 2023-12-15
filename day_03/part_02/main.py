@@ -9,6 +9,7 @@ FILE_PATH: str = "../puzzle_input.txt"
 def get_adjacent_lines(line_index: int, lines: list[str]) -> tuple[Optional[str], Optional[str]]:
     """"""
 
+    # There's no "previous"/"next" line for the first/last line
     previous_line: Optional[str] = lines[line_index - 1] if line_index != 0 else None
     next_line: Optional[str] = lines[line_index + 1] if line_index != (len(lines) - 1) else None
 
@@ -19,13 +20,10 @@ def main() -> None:
     """Prints the sum of all the gear ratios in the engine schematic."""
 
     lines: list[str] = read_file(file_path=FILE_PATH)
-
-    gear_ratios_sum: int = 0
     digits: list[str] = []
     symbol_data_storage: SymbolDataStorage = SymbolDataStorage(detected_symbols={})
 
     for line_index, line in enumerate(lines):
-        # There's no "previous"/"next" line for the first/last line
         previous_line: Optional[str]
         next_line: Optional[str]
         previous_line, next_line = get_adjacent_lines(line_index=line_index, lines=lines)
@@ -56,3 +54,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+    # import timeit
+    # print(f"Time taken: {timeit.timeit(main, number=50)} seconds")
