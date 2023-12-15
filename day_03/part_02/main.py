@@ -59,22 +59,38 @@ def main() -> None:
                     #     ],
                     # }
 
+                    symbol_found: bool = False
+
                     try:
-                        # Attempt to append the symbol data to a line index key
-                        detected_symbols[detector.symbol.line_index].append(
-                            SymbolData(
-                                index=detector.symbol.index,
-                                adjacent_numbers=[number.value],
-                            ),
-                        )
+                        # Attempt to append a new number to SymbolData.adjacent_numbers if the index
+                        # matches with an existing symbol
+                        for symbol_data_index, symbol_data in enumerate(detected_symbols[detector.symbol.line_index]):
+                            if symbol_data.index == detector.symbol.index:
+                                detected_symbols[detector.symbol.line_index][symbol_data_index].adjacent_numbers.append(
+                                    number.value
+                                )
+                                symbol_found = True
+                                break
                     except KeyError:
-                        # If there isn't such line index key, add it in
-                        detected_symbols[detector.symbol.line_index] = [
-                            SymbolData(
-                                index=detector.symbol.index,
-                                adjacent_numbers=[number.value],
-                            ),
-                        ]
+                        pass
+
+                    if not symbol_found:
+                        try:
+                            # If it's a new symbol, attempt to append a new SymbolData element
+                            detected_symbols[detector.symbol.line_index].append(
+                                SymbolData(
+                                    index=detector.symbol.index,
+                                    adjacent_numbers=[number.value],
+                                ),
+                            )
+                        except KeyError:
+                            # If there isn't such line index key, add it in
+                            detected_symbols[detector.symbol.line_index] = [
+                                SymbolData(
+                                    index=detector.symbol.index,
+                                    adjacent_numbers=[number.value],
+                                ),
+                            ]
 
                 digits = []
 
