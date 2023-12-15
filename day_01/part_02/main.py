@@ -16,7 +16,11 @@ digits: dict[str, str] = {
 
 
 def get_characters_to_skip() -> str:
-    """"""
+    """Returns a string of alphabetical characters that are not present in any of the digits letter representations.
+
+    Returns:
+        String of unused characters
+    """
 
     alphabet: str = "abcdefghijklmnopqrstuvwxyz"
     unused_characters: str = ""
