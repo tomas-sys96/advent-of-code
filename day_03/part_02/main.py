@@ -49,14 +49,6 @@ def main() -> None:
                 detector: SymbolDetector = SymbolDetector(number=number)
 
                 if detector.is_symbol_next_to_number():
-                    # Get the previous and next lines of the line on which the current symbol is
-                    detector.symbol.update_lines(
-                        *get_adjacent_lines(
-                            line_index=detector.symbol.line_index,
-                            lines=lines,
-                        )
-                    )
-
                     # detected_symbols = {
                     #     line_index_0: [
                     #         SymbolData(index=index_0, adjacent_numbers=[936, 672]),

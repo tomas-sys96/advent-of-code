@@ -18,14 +18,6 @@ class Symbol:
     index: int
     line_index: int
     line: str
-    previous_line: Optional[str] = None
-    next_line: Optional[str] = None
-
-    def update_lines(self, previous_line: Optional[str], next_line: Optional[str]) -> None:
-        """"""
-
-        self.previous_line = previous_line
-        self.next_line = next_line
 
 
 def read_file(file_path: str) -> list[str]:
