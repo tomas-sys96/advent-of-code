@@ -3,7 +3,7 @@ from typing import Optional
 from day_03.common import read_file, Number, Symbol, SymbolDataStorage
 from symbol_detector import SymbolDetector
 
-FILE_PATH: str = "../test_input.txt"
+FILE_PATH: str = "../puzzle_input.txt"
 
 
 def get_adjacent_lines(line_index: int, lines: list[str]) -> tuple[Optional[str], Optional[str]]:
@@ -50,6 +50,8 @@ def main() -> None:
                     symbol_data_storage.add_symbol_data(symbol=symbol, number=number)
 
                 digits = []
+
+    print(symbol_data_storage.get_gear_ratios_sum())
 
 
 if __name__ == "__main__":

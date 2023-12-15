@@ -1,6 +1,7 @@
 from collections import namedtuple
 from dataclasses import dataclass
 from typing import Optional, Type
+from math import prod
 
 SymbolData: Type[tuple] = namedtuple(typename="SymbolData", field_names=["index", "adjacent_numbers"])
 
@@ -31,11 +32,11 @@ class SymbolDataStorage:
 
         # detected_symbols = {
         #     line_index_0: [
-        #         SymbolData(index=index_0, adjacent_numbers=[936, 672]),
-        #         SymbolData(index=index_1, adjacent_numbers=[4, 24]),
+        #         SymbolData(index=index_0, adjacent_numbers=[number_1, number_2]),
+        #         SymbolData(index=index_1, adjacent_numbers=[number_3, number_4]),
         #     ],
         #     line_index_1: [
-        #         SymbolData(index=index_0, adjacent_numbers=[390, 425]),
+        #         SymbolData(index=index_0, adjacent_numbers=[number_5, number_6]),
         #     ],
         # }
 
@@ -69,6 +70,18 @@ class SymbolDataStorage:
                         adjacent_numbers=[number.value],
                     ),
                 ]
+
+    def get_gear_ratios_sum(self) -> int:
+        """"""
+
+        gear_ratios_sum: int = 0
+
+        for symbols in self.detected_symbols.values():
+            for symbol in symbols:
+                if len(symbol.adjacent_numbers) == 2:
+                    gear_ratios_sum += prod(symbol.adjacent_numbers)
+
+        return gear_ratios_sum
 
 
 def read_file(file_path: str) -> list[str]:
