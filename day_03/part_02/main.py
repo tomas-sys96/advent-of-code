@@ -1,7 +1,14 @@
 from typing import Optional
 
-from day_03.common import read_file, Number, Symbol, SymbolDataStorage, get_adjacent_lines
-from symbol_detector import SymbolDetector
+from day_03.common import (
+    read_file,
+    Number,
+    get_adjacent_lines,
+    Symbol,
+    SymbolDataStorage,
+    SymbolDetector,
+    SymbolType,
+)
 
 FILE_PATH: str = "../puzzle_input.txt"
 
@@ -33,19 +40,16 @@ def main() -> None:
                 )
                 detector: SymbolDetector = SymbolDetector(number=number)
 
-                symbol: Optional[Symbol] = detector.find_symbol_next_to_number()
+                symbol: Optional[Symbol] = detector.find_symbol_next_to_number(symbol=SymbolType.ASTERISK)
                 if symbol:
                     symbol_data_storage.add_symbol_data(symbol=symbol, number=number)
 
                 digits = []
-                # Delete the number object from memory
-                del number
+                # Delete the number and symbol objects from memory
+                del number, symbol
 
-    # print(symbol_data_storage.get_gear_ratios_sum())
+    print(symbol_data_storage.get_gear_ratios_sum())
 
 
 if __name__ == "__main__":
-    # main()
-
-    import timeit
-    print(f"Time taken: {timeit.timeit(main, number=1000)} seconds")
+    main()

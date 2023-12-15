@@ -1,7 +1,11 @@
 from collections import namedtuple
 from dataclasses import dataclass
+from enum import StrEnum
 from math import prod
-from typing import Optional, Type
+from typing import Optional, Type, Callable
+
+PERIOD: str = "."
+ASTERISK: str = "*"
 
 SymbolData: Type[tuple] = namedtuple(typename="SymbolData", field_names=["index", "adjacent_numbers"])
 
@@ -28,7 +32,12 @@ class SymbolDataStorage:
     detected_symbols: dict
 
     def add_symbol_data(self, symbol: Symbol, number: Number) -> None:
-        """"""
+        """Adds a symbol data point to the dictionary of detected symbols.
+
+        Args:
+            symbol: Symbol object
+            number: Number object
+        """
 
         # detected_symbols = {
         #     line_index_0: [
@@ -72,7 +81,12 @@ class SymbolDataStorage:
                 ]
 
     def get_gear_ratios_sum(self) -> int:
-        """"""
+        """Calculates and returns the sum of all gear ratios, i.e. where the asterisk symbol is adjacent to exactly
+        two part numbers.
+
+        Returns:
+            gear_ratios_sum: Sum of all gear ratios
+        """
 
         gear_ratios_sum: int = 0
 
@@ -99,10 +113,135 @@ def read_file(file_path: str) -> list[str]:
 
 
 def get_adjacent_lines(line_index: int, lines: list[str]) -> tuple[Optional[str], Optional[str]]:
-    """"""
+    """Get the previous and next line for a line at given index.
+
+    Args:
+        line_index: Index of the line
+        lines: List of lines
+
+    Returns:
+        tuple:
+            previous_line: Line before the given line,
+            next_line: Line after the given line
+    """
 
     # There's no "previous"/"next" line for the first/last line
     previous_line: Optional[str] = lines[line_index - 1] if line_index != 0 else None
     next_line: Optional[str] = lines[line_index + 1] if line_index != (len(lines) - 1) else None
 
     return previous_line, next_line
+
+
+class SymbolType(StrEnum):
+    """String representation of symbols to look for next to a number."""
+
+    ANY: str = "any"
+    ASTERISK: str = "asterisk"
+
+
+class SymbolDetector:
+    """Class for detecting symbols adjacent to a number at given indices.
+
+    Attributes:
+        number: Number at a given line and indices
+    """
+
+    _instance: Optional["SymbolDetector"] = None
+
+    def __new__(cls, *args, **kwargs) -> "SymbolDetector":
+        if not cls._instance:
+            cls._instance = super(SymbolDetector, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self, number: Number) -> None:
+        self.number: Number = number
+
+    @staticmethod
+    def _is_any_symbol(character: str) -> bool:
+        """Checks if a character is a symbol.
+
+        Args:
+            character: Character to be validated as a symbol
+
+        Returns:
+            True if the character is a valid symbol (e.g. /, #, +, * etc.), False otherwise
+        """
+
+        return not character.isdigit() and not character == PERIOD
+
+    @staticmethod
+    def _is_asterisk_symbol(character: str) -> bool:
+        """Checks if a character is an asterisk symbol.
+
+        Args:
+            character: Character to be validated as an asterisk symbol
+
+        Returns:
+            True if the character is an asterisk symbol, False otherwise
+        """
+
+        return character == ASTERISK
+
+    def _find_symbol_next_to_number_horizontally(self, is_symbol: Callable) -> Optional[Symbol]:
+        """Checks for a symbol adjacent to the current number in the horizontal direction.
+
+        Args:
+            is_symbol: Function that validates characters as the target symbol
+
+        Returns:
+            Symbol object if there is a symbol next to the number, None otherwise
+        """
+
+        for index in (self.number.start_index - 1, self.number.stop_index + 1):
+            # Can be out of bounds if a digit is the first/last element on the line
+            if index < 0 or index > (len(self.number.line) - 1):
+                continue
+
+            if is_symbol(character=self.number.line[index]):
+                return Symbol(index=index, line_index=self.number.line_index)
+
+    def _find_symbol_next_to_number_vertically(self, is_symbol: Callable) -> Optional[Symbol]:
+        """Checks for a symbol adjacent to the current number in the vertical/diagonal direction.
+
+        Args:
+            is_symbol: Function that validates characters as the target symbol
+
+        Returns:
+            Symbol object if there is a symbol next to the number, None otherwise
+        """
+
+        for line in (self.number.previous_line, self.number.next_line):
+            # A previous/next line may not exist -> skip to the next iteration
+            if not line:
+                continue
+            # Get the current line's index so that we know on which line to find the symbol
+            line_index: int = (
+                self.number.line_index - 1 if line is self.number.previous_line else self.number.line_index + 1
+            )
+
+            # -1 and + 2 because we need to check for diagonally adjacent symbols, too
+            for index in range(self.number.start_index - 1, self.number.stop_index + 2):
+                # Can be out of bounds if a digit is the first/last element on the line
+                if index < 0 or index > len(line) - 1:
+                    continue
+
+                if is_symbol(character=line[index]):
+                    return Symbol(index=index, line_index=line_index)
+
+    def find_symbol_next_to_number(self, symbol: SymbolType) -> Optional[Symbol]:
+        """Checks for a symbol adjacent to the current number.
+
+        Args:
+            symbol: Target symbol to look for
+
+        Returns:
+            Symbol object if there is a symbol next to the number, None otherwise
+        """
+
+        validation_function: Callable = self._is_any_symbol if symbol is SymbolType.ANY else self._is_asterisk_symbol
+
+        return self._find_symbol_next_to_number_horizontally(
+            is_symbol=validation_function,
+        ) or self._find_symbol_next_to_number_vertically(
+            is_symbol=validation_function,
+        )
