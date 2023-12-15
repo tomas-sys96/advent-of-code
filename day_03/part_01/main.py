@@ -37,6 +37,8 @@ def main() -> None:
                     part_numbers_sum += int("".join(digits))
 
                 digits = []
+                # Delete the number object from memory
+                del number
 
     print(part_numbers_sum)
 

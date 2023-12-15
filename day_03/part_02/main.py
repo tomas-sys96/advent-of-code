@@ -38,12 +38,14 @@ def main() -> None:
                     symbol_data_storage.add_symbol_data(symbol=symbol, number=number)
 
                 digits = []
+                # Delete the number object from memory
+                del number
 
-    print(symbol_data_storage.get_gear_ratios_sum())
+    # print(symbol_data_storage.get_gear_ratios_sum())
 
 
 if __name__ == "__main__":
-    main()
+    # main()
 
-    # import timeit
-    # print(f"Time taken: {timeit.timeit(main, number=50)} seconds")
+    import timeit
+    print(f"Time taken: {timeit.timeit(main, number=1000)} seconds")
