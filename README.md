@@ -3,4 +3,4 @@
 
 <p>To learn more about the event, click <a href="https://adventofcode.com/2023/about">here</a>.</p>
 
-<p><img alt="advent-of-code-banner" src="https://blog.pythondiscord.com/content/images/size/w2000/2021/03/AoC_banner.png" /></p>
+<p><img alt="advent-of-code-banner" src="https://blog.pythondiscord.com/content/images/size/w2000/2021/03/AoC_banner.png" width="70%" height="auto"></p>
