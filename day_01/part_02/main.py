@@ -1,6 +1,6 @@
 from day_01.helpers.common import read_file
 
-FILE_PATH: str = "../puzzle_input.txt"
+FILE_PATH: str = "../test_input.txt"
 
 digits: dict[str, str] = {
     "one": "1",
@@ -15,54 +15,61 @@ digits: dict[str, str] = {
 }
 
 
-def get_characters_to_skip() -> str:
-    """Returns a string of alphabetical characters that are not present in any of the digits letter representations.
+def get_letters_to_skip() -> str:
+    """Returns a string of letters that are not present in any of the digits word representations.
 
     Returns:
-        String of unused characters
+        String of unused letters
     """
 
     alphabet: str = "abcdefghijklmnopqrstuvwxyz"
-    unused_characters: str = ""
-    for character in alphabet:
+    unused_letters: str = ""
+    for letter in alphabet:
         matches: bool = False
-        for digit_as_letter in digits.keys():
-            if character in digit_as_letter:
+        for digit_as_word in digits.keys():
+            if letter in digit_as_word:
                 matches = True
                 break
         if not matches:
-            unused_characters += character
+            unused_letters += letter
 
-    return unused_characters
+    return unused_letters
 
 
 def main() -> None:
     """Prints the sum of all the calibration values."""
 
     lines: list[str] = read_file(file_path=FILE_PATH)
-    characters_to_skip: str = get_characters_to_skip()
+    letters_to_skip: str = get_letters_to_skip()
     calibration_values_sum: int = 0
 
     for line in lines:
-        current_digit: str = ""
+        word: str = ""
         digits_on_line: list[str] = []
 
         for character in line:
             if character.isdigit():
                 digits_on_line.append(character)
             else:
-                if character in characters_to_skip:
+                if character in letters_to_skip:
                     continue
-                for digit_as_letter in digits.keys():
-                    if digit_as_letter.startswith(current_digit + character):
-                        current_digit += character
-                        break
-                if current_digit in digits.keys():
-                    digits_on_line.append(digits[current_digit])
-                    current_digit = ""
 
-        if len(digits_on_line) >= 2:
+                for digit_as_word in digits.keys():
+                    if digit_as_word.startswith(word + character):
+                        word += character
+                        break
+                    elif digit_as_word.startswith(character) and word:
+                        word = character
+                        continue
+
+                if word in digits.keys():
+                    digits_on_line.append(digits[word])
+                    word = ""
+
+        try:
             calibration_values_sum += int("".join([digits_on_line[0], digits_on_line[-1]]))
+        except IndexError:
+            pass
 
     print(calibration_values_sum)
 
