@@ -1,6 +1,5 @@
 from collections import namedtuple
 from dataclasses import dataclass
-from enum import StrEnum
 from math import prod
 from typing import Optional, Callable, Type
 
@@ -10,13 +9,6 @@ PERIOD: str = "."
 ASTERISK: str = "*"
 
 SymbolDataPoint: Type[tuple] = namedtuple(typename="SymbolDataPoint", field_names=["index", "adjacent_numbers"])
-
-
-class SymbolType(StrEnum):
-    """String representation of symbols to look for next to a number."""
-
-    ANY: str = "any"
-    ASTERISK: str = "asterisk"
 
 
 @dataclass
@@ -185,17 +177,17 @@ class SymbolDetector:
                 if is_symbol(character=line[index]):
                     return Symbol(index=index, line_index=line_index)
 
-    def find_symbol_next_to_number(self, symbol: SymbolType) -> Optional[Symbol]:
+    def find_symbol_next_to_number(self, symbol: Optional[str] = None) -> Optional[Symbol]:
         """Checks for a symbol adjacent to the current number.
 
         Args:
-            symbol: Target symbol to look for
+            symbol: Symbol to look for
 
         Returns:
             Symbol object if there is a symbol next to the number, None otherwise
         """
 
-        validation_function: Callable = self._is_any_symbol if symbol is SymbolType.ANY else self._is_asterisk_symbol
+        validation_function: Callable = self._is_asterisk_symbol if symbol == "*" else self._is_any_symbol
 
         return self._find_symbol_next_to_number_horizontally(
             is_symbol=validation_function,

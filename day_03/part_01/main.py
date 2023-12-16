@@ -2,7 +2,7 @@ from typing import Optional
 
 from common import read_file
 from day_03.helpers import get_adjacent_lines, Number
-from day_03.symbols import SymbolDetector, Symbol, SymbolType
+from day_03.symbols import SymbolDetector, Symbol
 
 FILE_PATH: str = "../puzzle_input.txt"
 
@@ -34,7 +34,7 @@ def main() -> None:
                 )
                 detector: SymbolDetector = SymbolDetector(number=number)
 
-                symbol: Optional[Symbol] = detector.find_symbol_next_to_number(symbol=SymbolType.ANY)
+                symbol: Optional[Symbol] = detector.find_symbol_next_to_number()
                 if symbol:
                     part_numbers_sum += int("".join(digits))
 
