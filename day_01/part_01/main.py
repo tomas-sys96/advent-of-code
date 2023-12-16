@@ -23,6 +23,8 @@ def main() -> None:
 
         if first_digit and last_digit:
             calibration_values_sum += int("".join([first_digit, last_digit]))
+            first_digit = ""
+            last_digit = ""
 
     print(calibration_values_sum)
 
