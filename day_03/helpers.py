@@ -13,20 +13,6 @@ class Number:
     next_line: Optional[str]
 
 
-def read_file(file_path: str) -> list[str]:
-    """Reads a text file and returns its contents as a list of strings.
-
-    Args:
-        file_path: Path to the text file to be read
-
-    Returns:
-        Text file represented as a list of strings
-    """
-
-    with open(file=file_path, mode="r") as file:
-        return [line.replace("\n", "") for line in file.readlines()]
-
-
 def get_adjacent_lines(line_index: int, lines: list[str]) -> tuple[Optional[str], Optional[str]]:
     """Get the previous and next line for a line at given index.
 

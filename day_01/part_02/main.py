@@ -1,5 +1,5 @@
-from day_01.helpers.common import read_file
-from day_01.helpers.digits import DigitDataStorage
+from common import read_file
+from day_01.digits import DigitDataStorage
 
 FILE_PATH: str = "../puzzle_input.txt"
 

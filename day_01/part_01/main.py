@@ -1,5 +1,5 @@
-from day_01.helpers.common import read_file
-from day_01.helpers.digits import get_first_digit
+from common import read_file
+from day_01.digits import get_first_digit
 
 FILE_PATH: str = "../puzzle_input.txt"
 

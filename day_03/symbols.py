@@ -4,7 +4,7 @@ from enum import StrEnum
 from math import prod
 from typing import Optional, Callable, Type
 
-from day_03.helpers.common import Number
+from day_03.helpers import Number
 
 PERIOD: str = "."
 ASTERISK: str = "*"

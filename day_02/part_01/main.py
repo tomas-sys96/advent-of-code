@@ -1,4 +1,4 @@
-from day_02.helpers.common import read_file
+from common import read_file
 
 FILE_PATH: str = "../puzzle_input.txt"
 
