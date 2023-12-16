@@ -9,7 +9,7 @@ from day_03.helpers.common import Number
 PERIOD: str = "."
 ASTERISK: str = "*"
 
-SymbolData: Type[tuple] = namedtuple(typename="SymbolData", field_names=["index", "adjacent_numbers"])
+SymbolDataPoint: Type[tuple] = namedtuple(typename="SymbolDataPoint", field_names=["index", "adjacent_numbers"])
 
 
 class SymbolType(StrEnum):
@@ -39,11 +39,11 @@ class SymbolDataStorage:
 
         # detected_symbols = {
         #     line_index_0: [
-        #         SymbolData(index=index_0, adjacent_numbers=[number_1, number_2]),
-        #         SymbolData(index=index_1, adjacent_numbers=[number_3, number_4]),
+        #         SymbolDataPoint(index=index_0, adjacent_numbers=[number_1, number_2]),
+        #         SymbolDataPoint(index=index_1, adjacent_numbers=[number_3, number_4]),
         #     ],
         #     line_index_1: [
-        #         SymbolData(index=index_0, adjacent_numbers=[number_5, number_6]),
+        #         SymbolDataPoint(index=index_0, adjacent_numbers=[number_5, number_6]),
         #     ],
         # }
 
@@ -64,7 +64,7 @@ class SymbolDataStorage:
             try:
                 # If it's a new symbol, attempt to append a new SymbolData element
                 self.detected_symbols[symbol.line_index].append(
-                    SymbolData(
+                    SymbolDataPoint(
                         index=symbol.index,
                         adjacent_numbers=[number.value],
                     ),
@@ -72,7 +72,7 @@ class SymbolDataStorage:
             except KeyError:
                 # If there isn't such line index key, add it in
                 self.detected_symbols[symbol.line_index] = [
-                    SymbolData(
+                    SymbolDataPoint(
                         index=symbol.index,
                         adjacent_numbers=[number.value],
                     ),
