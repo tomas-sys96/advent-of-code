@@ -1,6 +1,3 @@
-from dataclasses import dataclass
-from common import read_file
-
 FILE_PATH: str = "../puzzle_input.txt"
 
 max_cube_amount_per_color: dict[str, int] = {
