@@ -1,5 +1,5 @@
 from common import read_file
-from day_01.digits import DigitDataStorage
+from day_01.digits import get_digits_on_line, get_calibration_value
 
 FILE_PATH: str = "../puzzle_input.txt"
 
@@ -11,12 +11,9 @@ def main() -> None:
     calibration_values_sum: int = 0
 
     for line in lines:
-        # Create a dataclass to store the detected digits and their index on the line with
-        digit_data_storage: DigitDataStorage = DigitDataStorage(digits_on_line={})
-        digit_data_storage.update_digits_on_line(line=line)
-
-        calibration_values_sum += digit_data_storage.get_calibration_value()
-        del digit_data_storage
+        # Create a dictionary with digits and their indices on the line
+        # Obtain the first and the last digit, add them together and update the sum of calibration values
+        calibration_values_sum += get_calibration_value(digits_on_line=get_digits_on_line(line=line))
 
     print(calibration_values_sum)
 

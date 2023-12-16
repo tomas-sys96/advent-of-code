@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 digits: dict[str, str] = {
     "one": "1",
     "two": "2",
@@ -13,39 +11,46 @@ digits: dict[str, str] = {
 }
 
 
-@dataclass
-class DigitDataStorage:
-    digits_on_line: dict[int, str]
+def get_digits_on_line(line: str) -> dict[int, str]:
+    """Returns a dictionary with digits and their indices for a given line.
 
-    def update_digits_on_line(self, line: str) -> None:
-        """Adds digits and their indices for a given line to a dictionary.
+    Args:
+        line: Line to be checked
 
-        Args:
-            line: Line to be checked
-        """
+    Returns:
+        digits_on_line: Dictionary with digits and their indices
+    """
 
-        for character_index, character in enumerate(line):
-            if character.isdigit():
-                # Store the detected digits right away
-                self.digits_on_line[character_index] = character
-            else:
-                # Check if a substring starting at the current index equals to a digit as a word
-                for digit_as_word, digit in digits.items():
-                    if line[character_index : (character_index + len(digit_as_word))] == digit_as_word:
-                        self.digits_on_line[character_index] = digit
-                        break
+    digits_on_line: dict[int, str] = {}
 
-    def get_calibration_value(self) -> int:
-        """Returns the calibration value for the current line.
+    for character_index, character in enumerate(line):
+        if character.isdigit():
+            # Store the detected digits right away
+            digits_on_line[character_index] = character
+        else:
+            # Check if a substring starting at the current index equals to a digit as a word
+            for digit_as_word, digit in digits.items():
+                if line[character_index : (character_index + len(digit_as_word))] == digit_as_word:
+                    digits_on_line[character_index] = digit
+                    break
 
-        Returns:
-            Calibration value
-        """
+    return digits_on_line
 
-        first_digit: str = self.digits_on_line[min(self.digits_on_line.keys())]
-        last_digit: str = self.digits_on_line[max(self.digits_on_line.keys())]
 
-        return int(first_digit + last_digit)
+def get_calibration_value(digits_on_line: dict[int, str]) -> int:
+    """Returns the calibration value for the current line.
+
+    Args:
+        digits_on_line: Dictionary with digits and their indices
+
+    Returns:
+        Calibration value
+    """
+
+    first_digit: str = digits_on_line[min(digits_on_line.keys())]
+    last_digit: str = digits_on_line[max(digits_on_line.keys())]
+
+    return int(first_digit + last_digit)
 
 
 def get_first_digit(array: str | reversed) -> str:
