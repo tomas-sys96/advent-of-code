@@ -16,13 +16,13 @@ digits: dict[str, str] = {
 
 
 def main() -> None:
-    """Prints the sum of all the calibration values."""
+    """Prints the sum of all calibration values."""
 
     lines: list[str] = read_file(file_path=FILE_PATH)
     calibration_values_sum: int = 0
 
     for line in lines:
-        # Initialize a dictionary to store the detected digits and their index on the line
+        # Create a dictionary to store the detected digits and their index on the line in
         digits_on_line: dict[int, str] = {}
         for character_index, character in enumerate(line):
             if character.isdigit():
@@ -35,8 +35,10 @@ def main() -> None:
                         digits_on_line[character_index] = digit
                         break
 
+        # Find the first and the last digit
         first_digit: str = digits_on_line[min(digits_on_line.keys())]
         last_digit: str = digits_on_line[max(digits_on_line.keys())]
+
         calibration_values_sum += int(first_digit + last_digit)
 
     print(calibration_values_sum)

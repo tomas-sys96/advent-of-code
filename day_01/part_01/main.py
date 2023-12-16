@@ -19,7 +19,7 @@ def get_first_digit(array: str | reversed) -> str:
 
 
 def main() -> None:
-    """Prints the sum of all the calibration values."""
+    """Prints the sum of all calibration values."""
 
     lines: list[str] = read_file(file_path=FILE_PATH)
     calibration_values_sum: int = 0
