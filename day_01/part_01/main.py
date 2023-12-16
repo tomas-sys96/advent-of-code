@@ -1,21 +1,7 @@
 from day_01.helpers.common import read_file
+from day_01.helpers.digits import get_first_digit
 
 FILE_PATH: str = "../puzzle_input.txt"
-
-
-def get_first_digit(array: str | reversed) -> str:
-    """Returns the first digit in an array.
-
-    Args:
-        array: Iterable string object
-
-    Returns:
-        Digit as a string
-    """
-
-    for character in array:
-        if character.isdigit():
-            return character
 
 
 def main() -> None:
