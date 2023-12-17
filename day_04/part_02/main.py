@@ -1,41 +1,51 @@
+from common import read_file
 from day_04.helpers import separate_numbers
-from day_04.part_02.card import Card
 
 FILE_PATH: str = "../puzzle_input.txt"
 
 
-def main() -> None:
-    """Prints the sum of all original and copied winning scratchcards."""
+def get_points_for_card(winning_numbers: list[int], owned_numbers: list[int]) -> int:
+    """Calculates the points for a card.
 
+    Args:
+        winning_numbers: Winning numbers
+        owned_numbers: Numbers that a person owns
+
+    Returns:
+        Points for a card
+    """
+
+    points: int = 0
+    for number in owned_numbers:
+        if number in winning_numbers:
+            points += 1
+
+    return points
+
+
+def main() -> None:
+    lines: list[str] = read_file(file_path=FILE_PATH)
     card_instances: dict[str, int] = {}
 
-    with open(file=FILE_PATH, mode="r") as file:
-        while True:
-            line: str = file.readline()
-            if not line:
-                break
+    for line in lines:
+        card_number: int = int(line.split(":")[0].split()[1].strip())
 
-            current_card_number: int = int(line.split(":")[0].split()[1].strip())
-            # At least one instance of each of the original scratchcards is always included
-            if f"card_{current_card_number}" in card_instances.keys():
-                card_instances[f"card_{current_card_number}"] += 1
-            else:
-                card_instances[f"card_{current_card_number}"] = 1
+        # At least one instance of each of the original scratchcards is always included
+        if f"card_{card_number}" in card_instances.keys():
+            card_instances[f"card_{card_number}"] += 1
+        else:
+            card_instances[f"card_{card_number}"] = 1
 
-            card: Card = Card(
-                current_card_number,
-                *separate_numbers(numbers=line.split(":")[1]),
-            )
+        winning_numbers: list[int]
+        owned_numbers: list[int]
+        winning_numbers, owned_numbers = separate_numbers(numbers=line.split(":")[1])
 
-            next_card_numbers: list[int] = card.get_next_card_numbers()
-            for card_number in next_card_numbers:
-                try:
-                    card_instances[f"card_{card_number}"] += card_instances[f"card_{current_card_number}"]
-                except KeyError:
-                    card_instances[f"card_{card_number}"] = card_instances[f"card_{current_card_number}"]
-
-            # Delete the card object from memory
-            del card
+        points: int = get_points_for_card(winning_numbers=winning_numbers, owned_numbers=owned_numbers)
+        for number in range(card_number + 1, min(card_number + points, len(lines)) + 1):
+            try:
+                card_instances[f"card_{number}"] += card_instances[f"card_{card_number}"]
+            except KeyError:
+                card_instances[f"card_{number}"] = card_instances[f"card_{card_number}"]
 
     print(sum(card_instances.values()))
 
