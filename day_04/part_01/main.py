@@ -1,3 +1,5 @@
+from day_04.helpers import separate_numbers
+
 FILE_PATH: str = "../puzzle_input.txt"
 
 
