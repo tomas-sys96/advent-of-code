@@ -1,3 +1,6 @@
+FILE_PATH: str = "../puzzle_input.txt"
+
+
 def read_file(file_path: str) -> list[str]:
     """Reads a text file and returns its contents as a list of strings.
 

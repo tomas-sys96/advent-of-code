@@ -1,21 +1,19 @@
-from common import read_file
+from common import read_file, FILE_PATH
 from day_01.digits import get_digits_on_line, get_calibration_value
-
-FILE_PATH: str = "../puzzle_input.txt"
 
 
 def main() -> None:
-    """Prints the sum of all calibration values."""
+    """Prints the solution to Day 1, Part Two."""
 
+    total: int = 0
     lines: list[str] = read_file(file_path=FILE_PATH)
-    calibration_values_sum: int = 0
 
     for line in lines:
         # Create a dictionary with digits and their indices on the line
         # Obtain the first and the last digit, add them together and update the sum of calibration values
-        calibration_values_sum += get_calibration_value(digits_on_line=get_digits_on_line(line=line))
+        total += get_calibration_value(digits_on_line=get_digits_on_line(line=line))
 
-    print(calibration_values_sum)
+    print(total)
 
 
 if __name__ == "__main__":

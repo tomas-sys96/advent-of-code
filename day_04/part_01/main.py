@@ -1,6 +1,5 @@
+from common import FILE_PATH, read_file
 from day_04.helpers import separate_numbers
-
-FILE_PATH: str = "../puzzle_input.txt"
 
 
 def get_points_for_card(winning_numbers: list[str], owned_numbers: list[str]) -> int:
@@ -26,22 +25,20 @@ def get_points_for_card(winning_numbers: list[str], owned_numbers: list[str]) ->
 
 
 def main() -> None:
+    """Prints the solution to Day 4, Part One."""
+
     total: int = 0
+    lines: list[str] = read_file(file_path=FILE_PATH)
 
-    with open(file=FILE_PATH, mode="r") as file:
-        while True:
-            line: str = file.readline()
-            if not line:
-                break
+    for line in lines:
+        winning_numbers: list[str]
+        owned_numbers: list[str]
+        winning_numbers, owned_numbers = separate_numbers(numbers=line.split(":")[1])
 
-            winning_numbers: list[str]
-            owned_numbers: list[str]
-            winning_numbers, owned_numbers = separate_numbers(numbers=line.split(":")[1])
-
-            total += get_points_for_card(
-                winning_numbers=winning_numbers,
-                owned_numbers=owned_numbers,
-            )
+        total += get_points_for_card(
+            winning_numbers=winning_numbers,
+            owned_numbers=owned_numbers,
+        )
 
     print(total)
 

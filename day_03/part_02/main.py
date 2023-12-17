@@ -1,14 +1,12 @@
 from typing import Optional
 
-from common import read_file
+from common import read_file, FILE_PATH
 from day_03.helpers import get_adjacent_lines, Number
 from day_03.symbols import SymbolDataStorage, SymbolDetector, Symbol
 
-FILE_PATH: str = "../puzzle_input.txt"
-
 
 def main() -> None:
-    """Prints the sum of all the gear ratios in the engine schematic."""
+    """Prints the solution to Day 3, Part Two."""
 
     lines: list[str] = read_file(file_path=FILE_PATH)
     digits: list[str] = []
