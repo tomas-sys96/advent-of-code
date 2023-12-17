@@ -21,22 +21,21 @@ def is_too_many_cubes(cube_amount: int, cube_color: str) -> bool:
     return cube_amount > max_cube_amount_per_color[cube_color]
 
 
-def are_cube_amounts_possible(cube_subsets: list[str]) -> bool:
+def are_cube_amounts_possible(cube_sets: list[str]) -> bool:
     """Checks if all the amounts of cubes are possible for a given game.
 
     Args:
-        cube_subsets: Cube subsets (e.g. ['10 green, 9 blue', '1 red, 7 green'])
+        cube_sets: List of strings with cube amounts and colors
 
     Returns:
         True if all the cube amount are possible, False otherwise
     """
 
-    for cube_subset in cube_subsets:
-        for cube in cube_subset.split(","):
-            cube_amount: int = int(cube.split()[0].strip())
-            cube_color: str = cube.split()[1].strip()
-            if is_too_many_cubes(cube_amount=cube_amount, cube_color=cube_color):
-                return False
+    for cube_set in cube_sets:
+        cube_amount: int = int(cube_set.split()[0].strip())
+        cube_color: str = cube_set.split()[1].strip()
+        if is_too_many_cubes(cube_amount=cube_amount, cube_color=cube_color):
+            return False
 
     return True
 
@@ -54,9 +53,10 @@ def main() -> None:
             if not line:
                 break
 
-            cube_subsets: list[str] = line.split(":")[1].replace("\n", "").strip().split(";")
+            # cube_sets = ['10 green', '9 blue', '1 red', '7 green', ...]
+            cube_sets: list[str] = line.split(":")[1].replace("\n", "").replace(";", ",").split(",")
 
-            if are_cube_amounts_possible(cube_subsets=cube_subsets):
+            if are_cube_amounts_possible(cube_sets=cube_sets):
                 game_ids_sum += int(line.split(":")[0].split()[1])
 
     print(game_ids_sum)
