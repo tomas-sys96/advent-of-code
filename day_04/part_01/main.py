@@ -3,25 +3,7 @@ from day_04.helpers import separate_numbers
 FILE_PATH: str = "../puzzle_input.txt"
 
 
-def separate_numbers(numbers: str) -> tuple[list[int], list[int]]:
-    """Separates the winning and owned numbers.
-
-    Args:
-        numbers: All card numbers
-
-    Returns:
-        tuple:
-            winning_numbers: Winning numbers,
-            owned_numbers: Numbers that a person owns
-    """
-
-    winning_numbers: list[int] = [int(number.strip()) for number in numbers.split("|")[0].split()]
-    owned_numbers: list[int] = [int(number.strip()) for number in numbers.split("|")[1].split()]
-
-    return winning_numbers, owned_numbers
-
-
-def get_points_from_card(winning_numbers: list[int], owned_numbers: list[int]) -> int:
+def get_points_for_card(winning_numbers: list[int], owned_numbers: list[int]) -> int:
     """Calculates the sum of points per one card.
 
     Args:
@@ -58,7 +40,7 @@ def main() -> None:
             owned_numbers: list[int]
             winning_numbers, owned_numbers = separate_numbers(numbers=line.split(":")[1])
 
-            scratchcard_points_sum += get_points_from_card(
+            scratchcard_points_sum += get_points_for_card(
                 winning_numbers=winning_numbers,
                 owned_numbers=owned_numbers,
             )
