@@ -4,7 +4,7 @@ from day_04.helpers import separate_numbers
 FILE_PATH: str = "../puzzle_input.txt"
 
 
-def get_points_for_card(winning_numbers: list[int], owned_numbers: list[int]) -> int:
+def get_points_for_card(winning_numbers: list[str], owned_numbers: list[str]) -> int:
     """Calculates the points for a card.
 
     Args:
@@ -36,8 +36,8 @@ def main() -> None:
         else:
             card_instances[f"card_{card_number}"] = 1
 
-        winning_numbers: list[int]
-        owned_numbers: list[int]
+        winning_numbers: list[str]
+        owned_numbers: list[str]
         winning_numbers, owned_numbers = separate_numbers(numbers=line.split(":")[1])
 
         points: int = get_points_for_card(winning_numbers=winning_numbers, owned_numbers=owned_numbers)
