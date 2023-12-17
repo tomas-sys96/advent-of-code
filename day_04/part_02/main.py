@@ -30,10 +30,10 @@ def main() -> None:
     for line in lines:
         card_number: int = int(line.split(":")[0].split()[1].strip())
 
-        # At least one instance of each of the original scratchcards is always included
-        if f"card_{card_number}" in card_instances.keys():
+        # One instance of each of the original scratchcards is always included
+        try:
             card_instances[f"card_{card_number}"] += 1
-        else:
+        except KeyError:
             card_instances[f"card_{card_number}"] = 1
 
         winning_numbers: list[str]
