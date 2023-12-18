@@ -16,6 +16,9 @@ def main() -> None:
     """Prints the solution to Day 5, Part One."""
 
     lines: list[str] = read_puzzle_input()
+    # Append an empty string to the lines so that the last source-destination conversion may trigger
+    lines.append("")
+
     sources: list[int] = [int(number) for number in lines[0].split(":")[1].split()]
     destinations: list[int] = sources.copy()
 
@@ -57,8 +60,11 @@ def main() -> None:
             )
         )
 
-    print(min(destinations))
+    # print(min(destinations))
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    from timeit import timeit
+
+    print(f"{timeit(main, number=2000)} s")
