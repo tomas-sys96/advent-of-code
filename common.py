@@ -16,5 +16,5 @@ def read_puzzle_input() -> list[str]:
     except FileNotFoundError as exception:
         sys.exit(
             f"{exception.__class__.__name__}: "
-            f"Puzzle input text file is missing in the root of the day_xy/ directory"
+            f"Puzzle input text file is missing in the root of the day_XY/ directory"
         )
