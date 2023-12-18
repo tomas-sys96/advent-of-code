@@ -1,4 +1,15 @@
+from collections import namedtuple
 from common import read_puzzle_input
+
+
+ConversionRange: namedtuple = namedtuple(
+    typename="ConversionRange",
+    field_names=[
+        "destination_range_start",
+        "source_range_start",
+        "range_length",
+    ],
+)
 
 
 def main() -> None:
@@ -8,24 +19,25 @@ def main() -> None:
     sources: list[int] = [int(number) for number in lines[0].split(":")[1].split()]
     destinations: list[int] = sources.copy()
 
-    source_to_destination: dict = {}
+    conversion_ranges: list[ConversionRange] = []
 
     # Start on the first line of numbers of the seed-to-soil map
     for line in lines[3:]:
         if not line:
             # Convert sources to destinations
             for source_index, source in enumerate(sources):
-                destination: int
-                try:
-                    destination = source_to_destination[source]
-                except KeyError:
-                    destination = source
+                for conversion in conversion_ranges:
+                    if source in range(
+                        conversion.source_range_start, conversion.source_range_start + conversion.range_length
+                    ):
+                        destination: int = conversion.destination_range_start + (source - conversion.source_range_start)
+                        destinations[source_index] = destination
+                        break
 
-                destinations[source_index] = destination
-                sources = destinations.copy()
+            sources = destinations.copy()
 
-            # Empty the dictionary and continue on the next line
-            source_to_destination.clear()
+            # Empty the list and continue on the next line
+            conversion_ranges.clear()
             continue
 
         # Ignore lines without numbers
@@ -37,11 +49,13 @@ def main() -> None:
         range_length: int
         destination_range_start, source_range_start, range_length = [int(number) for number in line.split()]
 
-        for step in range(range_length):
-            try:
-                source_to_destination[source_range_start + step] = source_to_destination[source_range_start] + step
-            except KeyError:
-                source_to_destination[source_range_start] = destination_range_start
+        conversion_ranges.append(
+            ConversionRange(
+                destination_range_start,
+                source_range_start,
+                range_length,
+            )
+        )
 
     print(min(destinations))
 
