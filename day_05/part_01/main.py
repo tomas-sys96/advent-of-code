@@ -12,6 +12,29 @@ ConversionRange: namedtuple = namedtuple(
 )
 
 
+def get_destinations(sources: list[int], conversion_ranges: list[ConversionRange]) -> list[int]:
+    """Converts sources to destinations.
+
+    Args:
+        sources: List of source numbers
+        conversion_ranges: List of conversion ranges
+
+    Returns:
+        destinations: List of destination numbers
+    """
+
+    destinations: list[int] = sources.copy()
+
+    for source_index, source in enumerate(sources):
+        for conversion in conversion_ranges:
+            if source in range(conversion.source_range_start, conversion.source_range_start + conversion.range_length):
+                destination: int = conversion.destination_range_start + (source - conversion.source_range_start)
+                destinations[source_index] = destination
+                break
+
+    return destinations
+
+
 def main() -> None:
     """Prints the solution to Day 5, Part One."""
 
@@ -20,24 +43,13 @@ def main() -> None:
     lines.append("")
 
     sources: list[int] = [int(number) for number in lines[0].split(":")[1].split()]
-    destinations: list[int] = sources.copy()
-
     conversion_ranges: list[ConversionRange] = []
 
     # Start on the first line of numbers of the seed-to-soil map
     for line in lines[3:]:
         if not line:
-            # Convert sources to destinations
-            for source_index, source in enumerate(sources):
-                for conversion in conversion_ranges:
-                    if source in range(
-                        conversion.source_range_start, conversion.source_range_start + conversion.range_length
-                    ):
-                        destination: int = conversion.destination_range_start + (source - conversion.source_range_start)
-                        destinations[source_index] = destination
-                        break
-
-            sources = destinations.copy()
+            # Convert sources to destinations (i.e. sources for the next conversion)
+            sources = get_destinations(sources=sources, conversion_ranges=conversion_ranges)
 
             # Empty the list and continue on the next line
             conversion_ranges.clear()
@@ -60,7 +72,7 @@ def main() -> None:
             )
         )
 
-    print(min(destinations))
+    print(min(sources))
 
 
 if __name__ == "__main__":
