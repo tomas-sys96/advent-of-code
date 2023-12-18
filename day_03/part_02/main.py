@@ -1,6 +1,6 @@
 from typing import Optional
 
-from common import read_file, FILE_PATH
+from common import read_puzzle_input
 from day_03.helpers import get_adjacent_lines, Number
 from day_03.symbols import SymbolDataStorage, SymbolDetector, Symbol
 
@@ -8,7 +8,7 @@ from day_03.symbols import SymbolDataStorage, SymbolDetector, Symbol
 def main() -> None:
     """Prints the solution to Day 3, Part Two."""
 
-    lines: list[str] = read_file(file_path=FILE_PATH)
+    lines: list[str] = read_puzzle_input()
     digits: list[str] = []
     symbol_data_storage: SymbolDataStorage = SymbolDataStorage(detected_symbols={})
 

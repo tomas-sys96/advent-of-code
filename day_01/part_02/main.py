@@ -1,4 +1,4 @@
-from common import read_file, FILE_PATH
+from common import read_puzzle_input
 from day_01.digits import get_digits_on_line, get_calibration_value
 
 
@@ -6,7 +6,7 @@ def main() -> None:
     """Prints the solution to Day 1, Part Two."""
 
     total: int = 0
-    lines: list[str] = read_file(file_path=FILE_PATH)
+    lines: list[str] = read_puzzle_input()
 
     for line in lines:
         # Create a dictionary with digits and their indices on the line

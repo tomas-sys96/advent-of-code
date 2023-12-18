@@ -1,6 +1,6 @@
 from math import prod
 
-from common import FILE_PATH, read_file
+from common import read_puzzle_input
 from day_02.cubes import get_min_number_of_cubes_per_color
 
 
@@ -8,7 +8,7 @@ def main() -> None:
     """Prints the solution to Day 2, Part Two."""
 
     total: int = 0
-    lines: list[str] = read_file(file_path=FILE_PATH)
+    lines: list[str] = read_puzzle_input()
 
     for line in lines:
         # cube_sets = ['10 green', '9 blue', '1 red', '7 green', ...]

@@ -1,4 +1,4 @@
-from common import FILE_PATH, read_file
+from common import read_puzzle_input
 from day_04.helpers import separate_numbers
 
 
@@ -28,7 +28,7 @@ def main() -> None:
     """Prints the solution to Day 4, Part One."""
 
     total: int = 0
-    lines: list[str] = read_file(file_path=FILE_PATH)
+    lines: list[str] = read_puzzle_input()
 
     for line in lines:
         winning_numbers: list[str]

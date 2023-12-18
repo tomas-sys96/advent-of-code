@@ -1,4 +1,4 @@
-from common import read_file, FILE_PATH
+from common import read_puzzle_input
 from day_04.helpers import separate_numbers
 
 
@@ -24,7 +24,7 @@ def get_points_for_card(winning_numbers: list[str], owned_numbers: list[str]) ->
 def main() -> None:
     """Prints the solution to Day 4, Part Two."""
 
-    lines: list[str] = read_file(file_path=FILE_PATH)
+    lines: list[str] = read_puzzle_input()
     card_instances: dict[str, int] = {}
 
     for line in lines:

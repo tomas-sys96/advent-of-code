@@ -1,4 +1,4 @@
-from common import read_file, FILE_PATH
+from common import read_puzzle_input
 from day_01.digits import get_first_digit
 
 
@@ -6,7 +6,7 @@ def main() -> None:
     """Prints the solution to Day 1, Part One."""
 
     total: int = 0
-    lines: list[str] = read_file(file_path=FILE_PATH)
+    lines: list[str] = read_puzzle_input()
 
     for line in lines:
         # For the first digit, iterate over the line in the forward direction
