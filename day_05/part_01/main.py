@@ -60,11 +60,8 @@ def main() -> None:
             )
         )
 
-    # print(min(destinations))
+    print(min(destinations))
 
 
 if __name__ == "__main__":
-    # main()
-    from timeit import timeit
-
-    print(f"{timeit(main, number=2000)} s")
+    main()
