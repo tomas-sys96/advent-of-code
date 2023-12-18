@@ -1,6 +1,6 @@
 from collections import namedtuple
-from common import read_puzzle_input
 
+from common import read_puzzle_input
 
 ConversionRange: namedtuple = namedtuple(
     typename="ConversionRange",
@@ -23,16 +23,21 @@ def get_destinations(sources: list[int], conversion_ranges: list[ConversionRange
         destinations: List of destination numbers
     """
 
-    destinations: list[int] = sources.copy()
+    # Here, we're using a set object to avoid duplicate destination numbers
+    destinations: set[int] = set()
 
-    for source_index, source in enumerate(sources):
+    for source in sources:
+        is_converted: bool = False
         for conversion in conversion_ranges:
             if source in range(conversion.source_range_start, conversion.source_range_start + conversion.range_length):
                 destination: int = conversion.destination_range_start + (source - conversion.source_range_start)
-                destinations[source_index] = destination
+                destinations.add(destination)
+                is_converted = True
                 break
+        if not is_converted:
+            destinations.add(source)
 
-    return destinations
+    return list(destinations)
 
 
 def main() -> None:
