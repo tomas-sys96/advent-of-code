@@ -1,6 +1,6 @@
 import sys
 
-PATH_TO_PUZZLE_INPUT: str = "../puzzle_input.txt"
+PUZZLE_INPUT_PATH: str = "../puzzle_input.txt"
 
 
 def read_puzzle_input() -> list[str]:
@@ -11,7 +11,7 @@ def read_puzzle_input() -> list[str]:
     """
 
     try:
-        with open(file=PATH_TO_PUZZLE_INPUT, mode="r") as file:
+        with open(file=PUZZLE_INPUT_PATH, mode="r") as file:
             return [line.replace("\n", "") for line in file.readlines()]
     except FileNotFoundError as exception:
         sys.exit(

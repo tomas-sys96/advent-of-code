@@ -1,7 +1,8 @@
+import sys
 from collections import namedtuple
 from math import inf
 
-from common import read_puzzle_input
+from common import PUZZLE_INPUT_PATH
 
 ConversionRange: namedtuple = namedtuple(
     typename="ConversionRange",
@@ -11,6 +12,45 @@ ConversionRange: namedtuple = namedtuple(
         "range_length",
     ],
 )
+
+
+def read_puzzle_input() -> list[str]:
+    """Reads a puzzle input text file located in the root of the current directory.
+
+    Returns:
+        Text file represented as a list of strings
+    """
+
+    try:
+        with open(file=PUZZLE_INPUT_PATH, mode="r") as file:
+            return file.read().split("\n\n")
+    except FileNotFoundError as exception:
+        sys.exit(
+            f"{exception.__class__.__name__}: "
+            f"Puzzle input text file is missing in the root of the day_XY/ directory"
+        )
+
+
+def get_maps(lines: list[str]) -> list[list[ConversionRange]]:
+    """Returns the conversion maps.
+
+    Args:
+        lines: Lists of strings containing conversion maps details
+
+    Returns:
+        maps: List of conversion maps lists
+    """
+
+    maps: list[list[ConversionRange]] = []
+    for conversion_map in lines:
+        map_to_bind: list[ConversionRange] = []
+        for conversion_range in conversion_map.split("\n")[1:]:
+            if not conversion_range:
+                continue
+            map_to_bind.append(ConversionRange(*[int(number) for number in conversion_range.split()]))
+        maps.append(map_to_bind)
+
+    return maps
 
 
 def get_seeds(line: str) -> list[int]:
@@ -32,22 +72,26 @@ def get_seeds(line: str) -> list[int]:
             yield seed
 
 
-def get_destination(source: int, conversion_ranges: list[ConversionRange]) -> int:
-    """Converts a source number to a destination number.
+def get_location(seed: int, maps: list[list[ConversionRange]]) -> int:
+    """Converts a seed number to a location number.
 
     Args:
-        source: Source number
-        conversion_ranges: List of conversion ranges
+        seed: Seed number
+        maps: List of conversion maps
 
     Returns:
-        destination: Destination number
+        value: Location number
     """
 
-    for conversion in conversion_ranges:
-        if source in range(conversion.source_range_start, conversion.source_range_start + conversion.range_length):
-            return conversion.destination_range_start + (source - conversion.source_range_start)
+    value: int = seed
 
-    return source
+    for conversion_map in maps:
+        for conversion in conversion_map:
+            if value in range(conversion.source_range_start, conversion.source_range_start + conversion.range_length):
+                value = conversion.destination_range_start + (value - conversion.source_range_start)
+                break
+
+    return value
 
 
 def main() -> None:
@@ -55,46 +99,14 @@ def main() -> None:
 
     lowest_location_number: float = inf
     lines: list[str] = read_puzzle_input()
-    # Append an empty string to the lines so that the last source-destination conversion may trigger
-    lines.append("")
+
+    maps: list[list[ConversionRange]] = get_maps(lines=lines[1:])
 
     for seed in get_seeds(line=lines[0]):
-        source: int = seed
-        conversion_ranges: list[ConversionRange] = []
+        location: int = get_location(seed=seed, maps=maps)
 
-        # Start on the first line of numbers of the seed-to-soil map
-        for line in lines[3:]:
-            if not line:
-                # Convert a source to a destination
-                source = get_destination(source=source, conversion_ranges=conversion_ranges)
-
-                # Empty the list and continue on the next line
-                conversion_ranges.clear()
-                continue
-
-            # Ignore lines without numbers
-            if any([character.isalpha() for character in line]):
-                continue
-
-            destination_range_start: int
-            source_range_start: int
-            range_length: int
-            destination_range_start, source_range_start, range_length = [int(number) for number in line.split()]
-
-            # TODO: The destination number could be calculated here, as soon as the source is within the range
-            #  -> convert to destination
-            #  -> no need for conversion_ranges list
-
-            conversion_ranges.append(
-                ConversionRange(
-                    destination_range_start,
-                    source_range_start,
-                    range_length,
-                )
-            )
-
-        if source < lowest_location_number:
-            lowest_location_number = source
+        if location < lowest_location_number:
+            lowest_location_number = location
 
     print(lowest_location_number)
 
