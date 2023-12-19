@@ -1,6 +1,8 @@
 from common import read_puzzle_input
 from day_04.helpers import separate_numbers
 
+FILE_PATH: str = "../puzzle_input.txt"
+
 
 def get_points_for_card(winning_numbers: list[str], owned_numbers: list[str]) -> int:
     """Calculates the points for a card.
@@ -24,7 +26,7 @@ def get_points_for_card(winning_numbers: list[str], owned_numbers: list[str]) ->
 def main() -> None:
     """Prints the solution to Day 4, Part Two."""
 
-    lines: list[str] = read_puzzle_input()
+    lines: list[str] = read_puzzle_input(file_path=FILE_PATH)
     card_instances: dict[str, int] = {}
 
     for line in lines:

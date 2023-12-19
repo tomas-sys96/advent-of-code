@@ -1,17 +1,18 @@
 import sys
 
-PUZZLE_INPUT_PATH: str = "../puzzle_input.txt"
 
-
-def read_puzzle_input() -> list[str]:
+def read_puzzle_input(file_path: str) -> list[str]:
     """Reads a puzzle input text file located in the root of the current directory.
+
+    Args:
+        Puzzle input file path
 
     Returns:
         Text file represented as a list of strings
     """
 
     try:
-        with open(file=PUZZLE_INPUT_PATH, mode="r") as file:
+        with open(file=file_path, mode="r") as file:
             return [line.replace("\n", "") for line in file.readlines()]
     except FileNotFoundError as exception:
         sys.exit(
