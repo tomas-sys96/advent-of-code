@@ -1,6 +1,6 @@
 from math import inf
 
-from day_05.helpers import read_puzzle_input, get_maps, get_location, ConversionRange
+from day_05.helpers import read_puzzle_input, get_maps, ConversionMap
 
 FILE_PATH: str = "../puzzle_input.txt"
 
@@ -30,7 +30,7 @@ def main() -> None:
     lowest_location: float = inf
     lines: list[str] = read_puzzle_input(file_path=FILE_PATH)
 
-    maps: list[list[ConversionRange]] = get_maps(lines=lines[1:])
+    maps: list[list[ConversionMap]] = get_maps(lines=lines[1:])
 
     for seed in get_seeds(line=lines[0]):
         location: int = get_location(seed=seed, maps=maps)

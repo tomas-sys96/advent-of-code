@@ -1,8 +1,8 @@
 import sys
 from collections import namedtuple
 
-ConversionRange: namedtuple = namedtuple(
-    typename="ConversionRange",
+ConversionMap: namedtuple = namedtuple(
+    typename="ConversionMap",
     field_names=[
         "destination_range_start",
         "source_range_start",
@@ -31,45 +31,23 @@ def read_puzzle_input(file_path: str) -> list[str]:
         )
 
 
-def get_maps(lines: list[str]) -> list[list[ConversionRange]]:
+def get_maps(lines: list[str]) -> list[list[ConversionMap]]:
     """Returns the conversion maps.
 
     Args:
-        lines: Lists of strings containing conversion maps details
+        lines: Lists of strings with source-to-destination mappings
 
     Returns:
-        maps: List of conversion maps lists
+        maps: List of conversion map lists
     """
 
-    maps: list[list[ConversionRange]] = []
-    for conversion_map in lines:
-        map_to_bind: list[ConversionRange] = []
-        for conversion_range in conversion_map.split("\n")[1:]:
-            if not conversion_range:
+    maps: list[list[ConversionMap]] = []
+    for mapping in lines:
+        conversion_maps: list[ConversionMap] = []
+        for conversion_map in mapping.split("\n")[1:]:
+            if not conversion_map:
                 continue
-            map_to_bind.append(ConversionRange(*[int(number) for number in conversion_range.split()]))
-        maps.append(map_to_bind)
+            conversion_maps.append(ConversionMap(*[int(number) for number in conversion_map.split()]))
+        maps.append(conversion_maps)
 
     return maps
-
-
-def get_location(seed: int, maps: list[list[ConversionRange]]) -> int:
-    """Converts a seed number to a location number.
-
-    Args:
-        seed: Seed number
-        maps: List of conversion maps
-
-    Returns:
-        value: Location number
-    """
-
-    value: int = seed
-
-    for conversion_map in maps:
-        for conversion in conversion_map:
-            if value in range(conversion.source_range_start, conversion.source_range_start + conversion.range_length):
-                value = conversion.destination_range_start + (value - conversion.source_range_start)
-                break
-
-    return value
