@@ -32,8 +32,8 @@ def get_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap
     #     def get_range_object(self):
     #         return range(self.start, self.end)
 
-    destination_ranges: list[range] = [seed_range]
     source_ranges: list[range]
+    destination_ranges: list[range] = [seed_range]
 
     for mapping in maps:
         source_ranges = destination_ranges.copy()
@@ -49,13 +49,6 @@ def get_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap
 
                 # Check if there's a full/partial overlap of ranges
                 if any(source in conversion_map_range for source in [source_range.start, source_range.stop - 1]):
-                    # In case of an overlap, delete the original source range from the list of destination ranges;
-                    # it'll be replaced by the shifted range (full overlap), or by the shifted and non-shifted parts
-                    # of the range (partial overlap)
-                    # TODO: Uncomment if necessary
-                    # if original_range in destination_ranges:
-                    #     destination_ranges.remove(original_range)
-
                     # Check if the first source falls into the conversion map range
                     # If it doesn't, separate a new range from the original source range
                     if source_range.start not in conversion_map_range:
