@@ -32,13 +32,13 @@ def read_puzzle_input(file_path: str) -> list[str]:
 
 
 def get_maps(lines: list[str]) -> list[list[ConversionMap]]:
-    """Returns the conversion maps.
+    """Returns a list of conversion mappings.
 
     Args:
         lines: Lists of strings with source-to-destination mappings
 
     Returns:
-        maps: List of conversion map lists
+        maps: List of conversion mappings
     """
 
     maps: list[list[ConversionMap]] = []
