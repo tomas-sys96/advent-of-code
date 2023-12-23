@@ -2,7 +2,7 @@ from math import inf
 
 from day_05.helpers import read_puzzle_input, get_maps, ConversionMap
 
-FILE_PATH: str = "../test_input.txt"
+FILE_PATH: str = "../puzzle_input.txt"
 
 
 def get_seed_ranges(line: str) -> list[range]:
@@ -48,6 +48,18 @@ def get_unchanged_source_ranges(source_range: range, overlapping_ranges: list[ra
     return [r for r in unchanged_ranges if r]
 
 
+def ranges_overlap(source_range: range, conversion_map_range: range) -> bool:
+    """"""
+
+    if any(source in conversion_map_range for source in [source_range.start, source_range.stop - 1]):
+        return True
+
+    if any(source in source_range for source in [conversion_map_range.start, conversion_map_range.stop - 1]):
+        return True
+
+    return False
+
+
 def get_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap]]) -> int:
     """"""
 
@@ -79,7 +91,7 @@ def get_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap
                 )
 
                 # Check if there's a full/partial overlap of ranges
-                if any(source in conversion_map_range for source in [source_range.start, source_range.stop - 1]):
+                if ranges_overlap(source_range=source_range, conversion_map_range=conversion_map_range):
                     # Check if the first source falls into the conversion map range
                     if source_range.start not in conversion_map_range:
                         source_range_start = conversion_map_range.start
@@ -87,7 +99,7 @@ def get_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap
 
                     # Check if the last source falls into the conversion map range
                     if source_range.stop - 1 not in conversion_map_range:
-                        range_length = conversion_map_range.stop - source_range.start
+                        range_length = conversion_map_range.stop - source_range_start
 
                     shift: int = conversion_map.destination_range_start - conversion_map.source_range_start
 
@@ -118,7 +130,7 @@ def get_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap
                 # Find the unchanged ranges and add them to destination ranges
                 # Ignore the scenario of full overlap between the source range and one of the conversion map ranges
                 # (meaning that there are no unchanged ranges)
-                if not (len(overlapping_ranges) == 1 and overlapping_ranges[0] is source_range):
+                if not (len(overlapping_ranges) == 1 and overlapping_ranges[0] == source_range):
                     destination_ranges.extend(
                         get_unchanged_source_ranges(
                             source_range=source_range,
@@ -126,7 +138,7 @@ def get_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap
                         )
                     )
 
-    return min(get_sorted_ranges(ranges=destination_ranges)[0])
+    return get_sorted_ranges(ranges=destination_ranges)[0].start
 
 
 def main() -> None:
