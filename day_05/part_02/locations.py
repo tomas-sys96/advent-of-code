@@ -24,7 +24,7 @@ class LowestLocationCalculator:
         self.overlapping_ranges: list[range] = []
         self.destination_ranges: list[range] = [seed_range]
 
-    def is_full_overlap(self, source_range: range) -> bool:
+    def _is_full_overlap(self, source_range: range) -> bool:
         """Checks if there is a full overlap between the source range and one of the conversion map ranges.
 
         Args:
@@ -36,7 +36,7 @@ class LowestLocationCalculator:
 
         return len(self.overlapping_ranges) == 1 and self.overlapping_ranges[0] == source_range
 
-    def get_unchanged_source_ranges(self, source_range: range) -> list[range]:
+    def _get_unchanged_source_ranges(self, source_range: range) -> list[range]:
         """Returns a list of source ranges that had no overlap with any conversion map ranges.
 
         Args:
@@ -46,7 +46,7 @@ class LowestLocationCalculator:
             Subsets of the original source range with no overlap
         """
 
-        sorted_ranges: list[range] = self.get_sorted_ranges(ranges=self.overlapping_ranges)
+        sorted_ranges: list[range] = self._get_sorted_ranges(ranges=self.overlapping_ranges)
 
         # First range
         unchanged_ranges: list[range] = [range(source_range.start, sorted_ranges[0].start)]
@@ -61,7 +61,7 @@ class LowestLocationCalculator:
         # Remove empty ranges from the list
         return [r for r in unchanged_ranges if r]
 
-    def add_overlapping_range(self, source_range_start: int, range_length: int, shift: int) -> None:
+    def _add_overlapping_range(self, source_range_start: int, range_length: int, shift: int) -> None:
         """Adds the new overlapping range to the lists of overlapping and destination ranges.
 
         Args:
@@ -85,7 +85,7 @@ class LowestLocationCalculator:
             )
         )
 
-    def add_unchanged_ranges(self, source_range: range) -> None:
+    def _add_unchanged_ranges(self, source_range: range) -> None:
         """Adds unchanged subsets of the original source range to the list of destination ranges.
 
         Args:
@@ -100,12 +100,12 @@ class LowestLocationCalculator:
                     source_range.stop,
                 )
             )
-        elif not self.is_full_overlap(source_range=source_range):
+        elif not self._is_full_overlap(source_range=source_range):
             # Full overlap between the source range and one of the conversion map ranges means that
             # there are no unchanged ranges to be added
-            self.destination_ranges.extend(self.get_unchanged_source_ranges(source_range=source_range))
+            self.destination_ranges.extend(self._get_unchanged_source_ranges(source_range=source_range))
 
-    def update_destination_ranges(self, source_range: range, mapping: list[ConversionMap]) -> None:
+    def _update_destination_ranges(self, source_range: range, mapping: list[ConversionMap]) -> None:
         """Updates destination ranges.
 
         Args:
@@ -120,19 +120,19 @@ class LowestLocationCalculator:
             )
 
             # Check if there's a full/partial overlap of ranges
-            if self.ranges_overlap(source_range=source_range, conversion_map_range=conversion_map_range):
-                source_range_start, range_length = self.get_range_parameters(
+            if self._ranges_overlap(source_range=source_range, conversion_map_range=conversion_map_range):
+                source_range_start, range_length = self._get_range_parameters(
                     source_range=source_range,
                     conversion_map_range=conversion_map_range,
                 )
 
-                self.add_overlapping_range(
+                self._add_overlapping_range(
                     source_range_start=source_range_start,
                     range_length=range_length,
                     shift=conversion_map.destination_range_start - conversion_map.source_range_start,
                 )
 
-        self.add_unchanged_ranges(source_range=source_range)
+        self._add_unchanged_ranges(source_range=source_range)
 
     def get_location(self, maps: list[list[ConversionMap]]) -> int:
         """Returns the lowest location number for a range of seed numbers.
@@ -149,12 +149,12 @@ class LowestLocationCalculator:
             self.destination_ranges.clear()
             for source_range in self.source_ranges:
                 self.overlapping_ranges.clear()
-                self.update_destination_ranges(source_range=source_range, mapping=mapping)
+                self._update_destination_ranges(source_range=source_range, mapping=mapping)
 
-        return self.get_sorted_ranges(ranges=self.destination_ranges)[0].start
+        return self._get_sorted_ranges(ranges=self.destination_ranges)[0].start
 
     @staticmethod
-    def ranges_overlap(source_range: range, conversion_map_range: range) -> bool:
+    def _ranges_overlap(source_range: range, conversion_map_range: range) -> bool:
         """Checks if the source and conversion map ranges have elements in common.
 
         Args:
@@ -174,7 +174,7 @@ class LowestLocationCalculator:
         return False
 
     @staticmethod
-    def get_range_parameters(source_range: range, conversion_map_range: range) -> tuple[int, int]:
+    def _get_range_parameters(source_range: range, conversion_map_range: range) -> tuple[int, int]:
         """Returns range parameters based on the overlap between the source and conversion map ranges.
 
         Args:
@@ -202,7 +202,7 @@ class LowestLocationCalculator:
         return source_range_start, range_length
 
     @staticmethod
-    def get_sorted_ranges(ranges: list[range]) -> list[range]:
+    def _get_sorted_ranges(ranges: list[range]) -> list[range]:
         """Sorts ranges by their start in ascending order.
 
         Args:
