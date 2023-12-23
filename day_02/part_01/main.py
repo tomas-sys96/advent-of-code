@@ -1,4 +1,3 @@
-from common import read_puzzle_input
 from day_02.cubes import are_cube_amounts_possible
 
 FILE_PATH: str = "../puzzle_input.txt"
@@ -14,7 +13,8 @@ def main() -> None:
     """Prints the solution to Day 2, Part One."""
 
     total: int = 0
-    lines: list[str] = read_puzzle_input(file_path=FILE_PATH)
+    with open(file=FILE_PATH, mode="r") as file:
+        lines: list[str] = [line.replace("\n", "") for line in file.readlines()]
 
     for line in lines:
         # cube_sets = ['10 green', '9 blue', '1 red', '7 green', ...]

@@ -1,4 +1,3 @@
-from common import read_puzzle_input
 from day_01.digits import get_first_digit
 
 FILE_PATH: str = "../puzzle_input.txt"
@@ -8,7 +7,8 @@ def main() -> None:
     """Prints the solution to Day 1, Part One."""
 
     total: int = 0
-    lines: list[str] = read_puzzle_input(file_path=FILE_PATH)
+    with open(file=FILE_PATH, mode="r") as file:
+        lines: list[str] = [line.replace("\n", "") for line in file.readlines()]
 
     for line in lines:
         # For the first digit, iterate over the line in the forward direction

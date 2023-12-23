@@ -1,6 +1,6 @@
 from typing import Optional
 
-from day_05.helpers import ConversionMap
+from day_05.common import ConversionMap
 
 
 class LowestLocationCalculator:

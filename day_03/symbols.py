@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from math import prod
 from typing import Optional, Callable, Type
 
-from day_03.helpers import Number
+from day_03.common import Number
 
 PERIOD: str = "."
 ASTERISK: str = "*"

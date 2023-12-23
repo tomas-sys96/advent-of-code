@@ -1,6 +1,6 @@
 from math import inf
 
-from day_05.helpers import read_puzzle_input, get_maps, ConversionMap
+from day_05.common import get_maps, ConversionMap
 
 FILE_PATH: str = "../puzzle_input.txt"
 
@@ -33,7 +33,8 @@ def main() -> None:
     """Prints the solution to Day 5, Part One."""
 
     lowest_location: float = inf
-    lines: list[str] = read_puzzle_input(file_path=FILE_PATH)
+    with open(file=FILE_PATH, mode="r") as file:
+        lines: list[str] = file.read().split("\n\n")
 
     maps: list[list[ConversionMap]] = get_maps(lines=lines[1:])
     seeds: list[int] = [int(number) for number in lines[0].split(":")[1].split()]
