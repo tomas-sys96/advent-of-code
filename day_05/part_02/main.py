@@ -1,4 +1,5 @@
 from math import inf
+from typing import Optional
 
 from day_05.helpers import read_puzzle_input, get_maps, ConversionMap
 
@@ -20,177 +21,229 @@ def get_seed_ranges(line: str) -> list[range]:
     return [range(seed_ranges[i], seed_ranges[i] + seed_ranges[i + 1]) for i in range(0, len(seed_ranges), 2)]
 
 
-def get_sorted_ranges(ranges: list[range]) -> list[range]:
-    """Sorts ranges by their start in ascending order.
+class LowestLocationCalculator:
+    """Class for calculating the lowest location number for a range of seed numbers.
 
-    Args:
-        ranges: List of ranges
-
-    Returns:
-        Sorted ranges
+    Attributes:
+        source_ranges: List of source ranges (gets updated for each mapping, i.e. list of conversion maps)
+        overlapping_ranges: List of ranges to be shifted (gets updated for each source range)
+        destination_ranges: List of destination ranges (gets updated for each source range)
     """
 
-    return sorted(ranges, key=lambda r: r.start)
+    _instance: Optional["LowestLocationCalculator"] = None
 
+    def __new__(cls, *args, **kwargs) -> "LowestLocationCalculator":
+        if not cls._instance:
+            cls._instance = super(LowestLocationCalculator, cls).__new__(cls)
+        return cls._instance
 
-def get_unchanged_source_ranges(source_range: range, overlapping_ranges: list[range]) -> list[range]:
-    """Returns a list of source ranges that had no overlap with any conversion map ranges.
+    def __init__(self, seed_range: range) -> None:
+        self.source_ranges: list[range] = []
+        self.overlapping_ranges: list[range] = []
+        self.destination_ranges: list[range] = [seed_range]
 
-    Args:
-        source_range: Original source range
-        overlapping_ranges: Subsets of the original source range with overlap
+    @staticmethod
+    def get_sorted_ranges(ranges: list[range]) -> list[range]:
+        """Sorts ranges by their start in ascending order.
 
-    Returns:
-        Subsets of the original source range with no overlap
-    """
+        Args:
+            ranges: List of ranges
 
-    sorted_ranges: list[range] = get_sorted_ranges(ranges=overlapping_ranges)
+        Returns:
+            Sorted ranges
+        """
 
-    # First range
-    unchanged_ranges: list[range] = [range(source_range.start, sorted_ranges[0].start)]
-    # Ranges in between
-    for i in range(0, len(sorted_ranges) - 1):
-        range_start: int = sorted_ranges[i].stop
-        range_length: int = sorted_ranges[i + 1].start - sorted_ranges[i].stop
-        unchanged_ranges.append(range(range_start, range_start + range_length))
-    # Last range
-    unchanged_ranges.append(range(sorted_ranges[-1].stop, source_range.stop))
+        return sorted(ranges, key=lambda r: r.start)
 
-    # Remove empty ranges from the list
-    return [r for r in unchanged_ranges if r]
+    @staticmethod
+    def ranges_overlap(source_range: range, conversion_map_range: range) -> bool:
+        """Checks if the source and conversion map ranges have elements in common.
 
+        Args:
+            source_range: Source range
+            conversion_map_range: Conversion map range
 
-def ranges_overlap(source_range: range, conversion_map_range: range) -> bool:
-    """Checks if the source and conversion map ranges have elements in common.
+        Returns:
+            True if either of the ranges overlaps the other, False otherwise
+        """
 
-    Args:
-        source_range: Source range
-        conversion_map_range: Conversion map range
+        if any(source in conversion_map_range for source in [source_range.start, source_range.stop - 1]):
+            return True
 
-    Returns:
-        True if either of the ranges overlaps the other, False otherwise
-    """
+        if any(source in source_range for source in [conversion_map_range.start, conversion_map_range.stop - 1]):
+            return True
 
-    if any(source in conversion_map_range for source in [source_range.start, source_range.stop - 1]):
-        return True
+        return False
 
-    if any(source in source_range for source in [conversion_map_range.start, conversion_map_range.stop - 1]):
-        return True
+    def is_full_overlap(self, source_range: range) -> bool:
+        """Checks if there is a full overlap between the source range and one of the conversion map ranges.
 
-    return False
+        Args:
+            source_range: Source range
 
+        Returns:
+            True in case of full overlap, False otherwise
+        """
 
-def get_range_parameters(source_range: range, conversion_map_range: range) -> tuple[int, int]:
-    """Returns range parameters based on the overlap between the source and conversion map ranges.
+        return len(self.overlapping_ranges) == 1 and self.overlapping_ranges[0] == source_range
 
-    Args:
-        source_range: Source range
-        conversion_map_range: Conversion map range
+    def get_unchanged_source_ranges(self, source_range: range) -> list[range]:
+        """Returns a list of source ranges that had no overlap with any conversion map ranges.
 
-    Returns:
-        tuple:
-            source_range_start: Source range start,
-            range_length: Range length
-    """
+        Args:
+            source_range: Original source range
 
-    source_range_start: int = source_range.start
-    range_length: int = source_range.stop - source_range.start
+        Returns:
+            Subsets of the original source range with no overlap
+        """
 
-    # Check if the first source falls into the conversion map range
-    if source_range.start not in conversion_map_range:
-        source_range_start = conversion_map_range.start
-        range_length = source_range.stop - source_range_start
+        sorted_ranges: list[range] = self.get_sorted_ranges(ranges=self.overlapping_ranges)
 
-    # Check if the last source falls into the conversion map range
-    if source_range.stop - 1 not in conversion_map_range:
-        range_length = conversion_map_range.stop - source_range_start
+        # First range
+        unchanged_ranges: list[range] = [range(source_range.start, sorted_ranges[0].start)]
+        # Ranges in between
+        for i in range(0, len(sorted_ranges) - 1):
+            range_start: int = sorted_ranges[i].stop
+            range_length: int = sorted_ranges[i + 1].start - sorted_ranges[i].stop
+            unchanged_ranges.append(range(range_start, range_start + range_length))
+        # Last range
+        unchanged_ranges.append(range(sorted_ranges[-1].stop, source_range.stop))
 
-    return source_range_start, range_length
+        # Remove empty ranges from the list
+        return [r for r in unchanged_ranges if r]
 
+    @staticmethod
+    def get_range_parameters(source_range: range, conversion_map_range: range) -> tuple[int, int]:
+        """Returns range parameters based on the overlap between the source and conversion map ranges.
 
-def get_min_location_for_seed_range(seed_range: range, maps: list[list[ConversionMap]]) -> int:
-    """Returns the lowest location number for a range of seed numbers.
+        Args:
+            source_range: Source range
+            conversion_map_range: Conversion map range
 
-    Args:
-        seed_range: Range of seed numbers
-        maps: List of conversion mappings
+        Returns:
+            tuple:
+                source_range_start: Source range start,
+                range_length: Range length
+        """
 
-    Returns:
-        Location number
-    """
+        source_range_start: int = source_range.start
+        range_length: int = source_range.stop - source_range.start
 
-    source_ranges: list[range]
-    destination_ranges: list[range] = [seed_range]
-    overlapping_ranges: list[range] = []
+        # Check if the first source falls into the conversion map range
+        if source_range.start not in conversion_map_range:
+            source_range_start = conversion_map_range.start
+            range_length = source_range.stop - source_range_start
 
-    for mapping in maps:
-        source_ranges = destination_ranges.copy()
-        destination_ranges.clear()
-        for source_range in source_ranges:
-            overlapping_ranges.clear()
-            for conversion_map in mapping:
-                conversion_map_range: range = range(
-                    conversion_map.source_range_start,
-                    conversion_map.source_range_start + conversion_map.range_length,
+        # Check if the last source falls into the conversion map range
+        if source_range.stop - 1 not in conversion_map_range:
+            range_length = conversion_map_range.stop - source_range_start
+
+        return source_range_start, range_length
+
+    def add_overlapping_range(self, source_range_start: int, range_length: int, shift: int) -> None:
+        """Adds the new overlapping range to the lists of overlapping and destination ranges.
+
+        Args:
+            source_range_start: Source range start
+            range_length: Source range length
+            shift: Value by which to shift the overlapping range
+        """
+
+        # Add the overlapping part of the source range to overlapping ranges
+        self.overlapping_ranges.append(
+            range(
+                source_range_start,
+                source_range_start + range_length,
+            )
+        )
+        # Add the shifted overlapping part of the source range to destination ranges
+        self.destination_ranges.append(
+            range(
+                source_range_start + shift,
+                source_range_start + shift + range_length,
+            )
+        )
+
+    def add_unchanged_ranges(self, source_range: range) -> None:
+        """Adds unchanged subsets of the original source range to the list of destination ranges.
+
+        Args:
+            source_range: Original source range
+        """
+
+        if not self.overlapping_ranges:
+            # Add the whole unchanged source range to destination ranges if there are no overlaps at all
+            self.destination_ranges.append(
+                range(
+                    source_range.start,
+                    source_range.stop,
+                )
+            )
+        elif not self.is_full_overlap(source_range=source_range):
+            # Full overlap between the source range and one of the conversion map ranges means that
+            # there are no unchanged ranges to be added
+            self.destination_ranges.extend(self.get_unchanged_source_ranges(source_range=source_range))
+
+    def update_destination_ranges(self, source_range: range, mapping: list[ConversionMap]) -> None:
+        """Updates destination ranges.
+
+        Args:
+            source_range: Source range
+            mapping: List of conversion maps
+        """
+
+        for conversion_map in mapping:
+            conversion_map_range: range = range(
+                conversion_map.source_range_start,
+                conversion_map.source_range_start + conversion_map.range_length,
+            )
+
+            # Check if there's a full/partial overlap of ranges
+            if self.ranges_overlap(source_range=source_range, conversion_map_range=conversion_map_range):
+                source_range_start, range_length = self.get_range_parameters(
+                    source_range=source_range,
+                    conversion_map_range=conversion_map_range,
                 )
 
-                # Check if there's a full/partial overlap of ranges
-                if ranges_overlap(source_range=source_range, conversion_map_range=conversion_map_range):
-                    source_range_start, range_length = get_range_parameters(
-                        source_range=source_range,
-                        conversion_map_range=conversion_map_range,
-                    )
-
-                    shift: int = conversion_map.destination_range_start - conversion_map.source_range_start
-
-                    # Add the overlapping part of the source range to overlapping ranges
-                    overlapping_ranges.append(
-                        range(
-                            source_range_start,
-                            source_range_start + range_length,
-                        )
-                    )
-                    # Add the shifted overlapping part of the source range to destination ranges
-                    destination_ranges.append(
-                        range(
-                            source_range_start + shift,
-                            source_range_start + shift + range_length,
-                        )
-                    )
-
-            if not overlapping_ranges:
-                # Add the whole unchanged source range to destination ranges if there are no overlaps at all
-                destination_ranges.append(
-                    range(
-                        source_range.start,
-                        source_range.stop,
-                    )
+                self.add_overlapping_range(
+                    source_range_start=source_range_start,
+                    range_length=range_length,
+                    shift=conversion_map.destination_range_start - conversion_map.source_range_start,
                 )
-            else:
-                # Find the unchanged ranges and add them to destination ranges
-                # Ignore the scenario of full overlap between the source range and one of the conversion map ranges
-                # (meaning that there are no unchanged ranges)
-                if not (len(overlapping_ranges) == 1 and overlapping_ranges[0] == source_range):
-                    destination_ranges.extend(
-                        get_unchanged_source_ranges(
-                            source_range=source_range,
-                            overlapping_ranges=overlapping_ranges,
-                        )
-                    )
 
-    return get_sorted_ranges(ranges=destination_ranges)[0].start
+        self.add_unchanged_ranges(source_range=source_range)
+
+    def get_lowest_location(self, maps: list[list[ConversionMap]]) -> int:
+        """Returns the lowest location number for a range of seed numbers.
+
+        Args:
+            maps: List of conversion mappings
+
+        Returns:
+            Location number
+        """
+
+        for mapping in maps:
+            self.source_ranges = self.destination_ranges.copy()
+            self.destination_ranges.clear()
+            for source_range in self.source_ranges:
+                self.overlapping_ranges.clear()
+                self.update_destination_ranges(source_range=source_range, mapping=mapping)
+
+        return self.get_sorted_ranges(ranges=self.destination_ranges)[0].start
 
 
 def main() -> None:
     """Prints the solution to Day 5, Part Two."""
 
-    lowest_location: float = inf
+    lowest_location: int | float = inf
     lines: list[str] = read_puzzle_input(file_path=FILE_PATH)
 
     maps: list[list[ConversionMap]] = get_maps(lines=lines[1:])
 
     for seed_range in get_seed_ranges(line=lines[0]):
-        location: int = get_min_location_for_seed_range(seed_range=seed_range, maps=maps)
+        location_calc: LowestLocationCalculator = LowestLocationCalculator(seed_range=seed_range)
+        location: int = location_calc.get_lowest_location(maps=maps)
 
         if location < lowest_location:
             lowest_location = location

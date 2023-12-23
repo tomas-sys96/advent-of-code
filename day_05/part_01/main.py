@@ -5,7 +5,7 @@ from day_05.helpers import read_puzzle_input, get_maps, ConversionMap
 FILE_PATH: str = "../puzzle_input.txt"
 
 
-def get_location_for_seed(seed: int, maps: list[list[ConversionMap]]) -> int:
+def get_location(seed: int, maps: list[list[ConversionMap]]) -> int:
     """Converts a seed number to a location number.
 
     Args:
@@ -39,7 +39,7 @@ def main() -> None:
     seeds: list[int] = [int(number) for number in lines[0].split(":")[1].split()]
 
     for seed in seeds:
-        location: int = get_location_for_seed(seed=seed, maps=maps)
+        location: int = get_location(seed=seed, maps=maps)
 
         if location < lowest_location:
             lowest_location = location
