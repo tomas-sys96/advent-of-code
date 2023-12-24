@@ -1,13 +1,8 @@
-from dataclasses import dataclass
 from math import prod
 
+from day_06.common import Race
+
 FILE_PATH: str = "../puzzle_input.txt"
-
-
-@dataclass
-class Race:
-    time: int
-    distance: int
 
 
 def get_races(lines: list[str]) -> list[Race]:
