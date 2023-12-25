@@ -11,10 +11,16 @@ class Hand:
     strength: int
 
 
-def get_strength_of_hand(cards: str) -> int:
-    """"""
+def get_strength_of_hand(cards: str, mapping: dict[str, int]) -> int:
+    """Returns the strength of a hand based on its type.
 
-    # TODO: Add type_strength_mapping dict?
+    Args:
+        cards: String of card labels
+        mapping: Type to strength mapping
+
+    Returns:
+        Strength value
+    """
 
     label_count: defaultdict = defaultdict(int)
 
@@ -23,39 +29,60 @@ def get_strength_of_hand(cards: str) -> int:
 
     match len(label_count):
         case 1:
-            # Five of a kind
-            return 7
+            return mapping["five_of_kind"]
         case 2:
             if any([count == 4 for count in label_count.values()]):
-                # Four of a kind
-                return 6
+                return mapping["four_of_kind"]
             else:
-                # Full house
-                return 5
+                return mapping["full_house"]
         case 3:
             if any([count == 3 for count in label_count.values()]):
-                # Three of a kind
-                return 4
+                return mapping["three_of_kind"]
             else:
-                # Two pairs
-                return 3
+                return mapping["two_pairs"]
         case 4:
-            # One pair
-            return 2
+            return mapping["one_pair"]
         case _:
-            return 1
+            return mapping["high_card"]
 
 
 def sort_by_strength_and_labels(hand: Hand) -> tuple[int, tuple]:
-    """"""
+    """Sorts hands of cards primarily based on their strength, and secondarily based on the order of individual labels.
+
+    Args:
+        hand: Hand of cards
+
+    Returns:
+        tuple:
+            Hand strength -- first rule,
+            Label order -- second rule
+    """
 
     label_order_mapping: dict[str, int] = {label: i for i, label in enumerate(reversed("AKQJT98765432"))}
     label_order: list[int] = [label_order_mapping[label] for label in hand.cards]
+
     return hand.strength, tuple(label_order)
 
 
 def sort_hands_of_cards(lines: list[str]) -> list[Hand]:
-    """"""
+    """Returns sorted hands of cards.
+
+    Args:
+        lines: Lines of strings with info about each hand of cards
+
+    Returns:
+        List of sorted hands of cards
+    """
+
+    type_strength_mapping: dict[str, int] = {
+        "five_of_kind": 6,
+        "four_of_kind": 5,
+        "full_house": 4,
+        "three_of_kind": 3,
+        "two_pairs": 2,
+        "one_pair": 1,
+        "high_card": 0,
+    }
 
     hands: list[Hand] = []
 
@@ -66,7 +93,10 @@ def sort_hands_of_cards(lines: list[str]) -> list[Hand]:
             Hand(
                 cards=cards,
                 bid=bid,
-                strength=get_strength_of_hand(cards=cards),
+                strength=get_strength_of_hand(
+                    cards=cards,
+                    mapping=type_strength_mapping,
+                ),
             )
         )
 
