@@ -46,11 +46,12 @@ def get_strength_of_hand(cards: str, mapping: dict[str, int]) -> int:
             return mapping["high_card"]
 
 
-def sort_by_strength_and_labels(hand: Hand) -> tuple[int, tuple]:
+def sort_by_strength_and_labels(hand: Hand, mapping: dict[str, int]) -> tuple[int, tuple]:
     """Sorts hands of cards primarily based on their strength, and secondarily based on the order of individual labels.
 
     Args:
         hand: Hand of cards
+        mapping: Label to order mapping
 
     Returns:
         tuple:
@@ -58,8 +59,7 @@ def sort_by_strength_and_labels(hand: Hand) -> tuple[int, tuple]:
             Label order -- second rule
     """
 
-    label_order_mapping: dict[str, int] = {label: i for i, label in enumerate(reversed("AKQJT98765432"))}
-    label_order: list[int] = [label_order_mapping[label] for label in hand.cards]
+    label_order: list[int] = [mapping[label] for label in hand.cards]
 
     return hand.strength, tuple(label_order)
 
@@ -84,6 +84,8 @@ def sort_hands_of_cards(lines: list[str]) -> list[Hand]:
         "high_card": 0,
     }
 
+    label_order_mapping: dict[str, int] = {label: i for i, label in enumerate(reversed("AKQJT98765432"))}
+
     hands: list[Hand] = []
 
     for line in lines:
@@ -100,7 +102,13 @@ def sort_hands_of_cards(lines: list[str]) -> list[Hand]:
             )
         )
 
-    return sorted(hands, key=sort_by_strength_and_labels)
+    return sorted(
+        hands,
+        key=lambda hand: sort_by_strength_and_labels(
+            hand=hand,
+            mapping=label_order_mapping,
+        ),
+    )
 
 
 def main() -> None:
