@@ -1,39 +1,27 @@
-FILE_PATH: str = "../test_input.txt"
+from math import lcm
+
+from day_08.common import get_nodes
+
+FILE_PATH: str = "../puzzle_input.txt"
 
 
-def get_nodes(lines: list[str]) -> dict[str, tuple]:
-    """Returns a dictionary of nodes and their elements.
-
-    Args:
-        lines: Lines of strings with info about nodes and elements
-
-    Returns:
-        Dictionary of node-elements pairs
-    """
-
-    nodes: dict[str, tuple] = {}
-    for line in lines:
-        node: str = line.split(" = ")[0]
-        elements: tuple = tuple(line.split(" = ")[1].removeprefix("(").removesuffix(")\n").split(", "))
-        nodes[node] = elements
-
-    return nodes
-
-
-def get_steps_to_target_nodes(instructions: str, nodes: dict[str, tuple], target_character: str) -> int:
-    """Calculates the number of steps it takes to reach all target nodes at once based on the instructions.
+def get_steps_to_target_node(
+    instructions: str,
+    nodes: dict[str, tuple],
+    current_node: str,
+    target_character: str,
+) -> int:
+    """Calculates the number of steps it takes to reach a target node based on the instructions.
 
     Args:
         instructions: Instructions to follow
         nodes: Dictionary of node-elements pairs
-        target_character: Character that all the target nodes should end with
+        current_node: Starting node
+        target_character: Character that the target node should end with
 
     Returns:
         Number of steps
     """
-
-    current_nodes: list[str]
-    next_nodes: list[str] = [node for node in nodes.keys() if node.endswith("A")]
 
     steps: int = 0
     while True:
@@ -41,19 +29,9 @@ def get_steps_to_target_nodes(instructions: str, nodes: dict[str, tuple], target
         steps += 1
 
         element_index: int = 0 if instruction == "L" else 1
+        current_node: str = nodes[current_node][element_index]
 
-        current_nodes = next_nodes.copy()
-        next_nodes.clear()
-        matches: int = 0
-
-        for node in current_nodes:
-            next_node: str = nodes[node][element_index]
-            next_nodes.append(next_node)
-
-            if next_node.endswith(target_character):
-                matches += 1
-
-        if matches == len(current_nodes):
+        if current_node.endswith(target_character):
             return steps
 
 
@@ -65,14 +43,22 @@ def main() -> None:
 
     instructions: str = lines[0].removesuffix("\n")
     nodes: dict[str, tuple] = get_nodes(lines=lines[2:])
+    starting_nodes: list[str] = [node for node in nodes.keys() if node.endswith("A")]
 
-    print(
-        get_steps_to_target_nodes(
-            instructions=instructions,
-            nodes=nodes,
-            target_character="Z",
+    # Get the minimum number of steps that it takes to reach the target node for every starting node
+    steps: list[int] = []
+    for node in starting_nodes:
+        steps.append(
+            get_steps_to_target_node(
+                instructions=instructions,
+                nodes=nodes,
+                current_node=node,
+                target_character="Z",
+            )
         )
-    )
+
+    # Print the least common multiple of all steps
+    print(lcm(*steps))
 
 
 if __name__ == "__main__":
