@@ -38,11 +38,8 @@ def get_steps_to_target_node(instructions: str, nodes: dict[str, tuple], target_
         instruction: str = instructions[steps % len(instructions)]
         steps += 1
 
-        match instruction:
-            case "L":
-                node = nodes[node][0]
-            case _:
-                node = nodes[node][1]
+        element_index: int = 0 if instruction == "L" else 1
+        node: str = nodes[node][element_index]
 
         if node == target_node:
             return steps
