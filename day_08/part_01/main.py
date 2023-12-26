@@ -32,7 +32,7 @@ def get_steps_to_target_node(instructions: str, nodes: dict[str, tuple], target_
         Number of steps
     """
 
-    current_node: str = "AAA"
+    node: str = "AAA"
     steps: int = 0
     while True:
         instruction: str = instructions[steps % len(instructions)]
@@ -40,11 +40,11 @@ def get_steps_to_target_node(instructions: str, nodes: dict[str, tuple], target_
 
         match instruction:
             case "L":
-                current_node = nodes[current_node][0]
+                node = nodes[node][0]
             case _:
-                current_node = nodes[current_node][1]
+                node = nodes[node][1]
 
-        if current_node == target_node:
+        if node == target_node:
             return steps
 
 
