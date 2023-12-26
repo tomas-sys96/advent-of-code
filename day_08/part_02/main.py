@@ -23,7 +23,7 @@ def main() -> None:
                 instructions=instructions,
                 nodes=nodes,
                 current_node=node,
-                target="Z",
+                target_node="??Z",
             )
         )
 

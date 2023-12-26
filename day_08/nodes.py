@@ -34,25 +34,25 @@ def is_target_node(node: str, target_node: str) -> bool:
     return node == target_node
 
 
-def endswith_target_character(node: str, target_character: str) -> bool:
+def endswith_target_character(node: str, target_node: str) -> bool:
     """Checks if a node string ends with the target character.
 
     Args:
         node: Node to be checked
-        target_character: Target character
+        target_node: Target node
 
     Returns:
         True if the node string ends with the target character, False otherwise
     """
 
-    return node.endswith(target_character)
+    return node.endswith(target_node[-1])
 
 
 def get_steps_to_target_node(
     instructions: str,
     nodes: dict[str, tuple],
     current_node: str,
-    target: str,
+    target_node: str,
 ) -> int:
     """Calculates the number of steps it takes to reach a target node based on the instructions.
 
@@ -60,13 +60,15 @@ def get_steps_to_target_node(
         instructions: Instructions to follow
         nodes: Dictionary of node-elements pairs
         current_node: Starting node
-        target: Target node, or the character that the target node should end with
+        target_node: Target node
 
     Returns:
         Number of steps
     """
 
-    is_target: Callable[[str, str], bool] = is_target_node if len(target) == 3 else endswith_target_character
+    is_target: Callable[[str, str], bool] = (
+        endswith_target_character if target_node.startswith("??") else is_target_node
+    )
 
     steps: int = 0
     while True:
@@ -76,5 +78,5 @@ def get_steps_to_target_node(
         element_index: int = 0 if instruction == "L" else 1
         current_node: str = nodes[current_node][element_index]
 
-        if is_target(current_node, target):
+        if is_target(current_node, target_node):
             return steps

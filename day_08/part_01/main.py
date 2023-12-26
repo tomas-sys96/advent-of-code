@@ -17,7 +17,7 @@ def main() -> None:
             instructions=instructions,
             nodes=nodes,
             current_node="AAA",
-            target="ZZZ",
+            target_node="ZZZ",
         )
     )
 
