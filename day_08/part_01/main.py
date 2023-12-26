@@ -1,5 +1,3 @@
-from builtins import dict
-
 FILE_PATH: str = "../puzzle_input.txt"
 
 
