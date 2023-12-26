@@ -34,18 +34,18 @@ def is_target_node(node: str, target_node: str) -> bool:
     return node == target_node
 
 
-def endswith_target_character(node: str, target_character: str) -> bool:
+def endswith_target_character(node: str, target_node: str) -> bool:
     """Checks if a node string ends with the target character.
 
     Args:
         node: Node to be checked
-        target_character: Target character
+        target_node: Target node
 
     Returns:
         True if the node string ends with the target character, False otherwise
     """
 
-    return node.endswith(target_character)
+    return node.endswith(target_node[-1])
 
 
 def get_steps_to_target_node(
@@ -66,7 +66,7 @@ def get_steps_to_target_node(
         Number of steps
     """
 
-    is_target: Callable[[str, str], bool] = is_target_node if len(target) == 3 else endswith_target_character
+    is_target: Callable[[str, str], bool] = endswith_target_character if "??" in target else is_target_node
 
     steps: int = 0
     while True:
