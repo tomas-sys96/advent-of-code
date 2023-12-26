@@ -47,9 +47,7 @@ def get_steps_to_target_node(instructions: str, nodes: dict[str, tuple], target_
                 current_node = nodes[current_node][1]
 
         if current_node == target_node:
-            break
-
-    return steps
+            return steps
 
 
 def main() -> None:
