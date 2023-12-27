@@ -5,7 +5,14 @@ Sequence: namedtuple = namedtuple(typename="Sequence", field_names=["first_value
 
 
 def get_sequences(line: str) -> list[list[int]]:
-    """"""
+    """Returns sequences of numbers, based on the initial sequence.
+
+    Args:
+        line: String with numbers
+
+    Returns:
+        List of sequences
+    """
 
     sequences: list[list[int]] = [[int(number) for number in line.removesuffix("\n").split()]]
 
@@ -16,7 +23,14 @@ def get_sequences(line: str) -> list[list[int]]:
 
 
 def get_extrapolated_value(sequences: list[list[int]]) -> int:
-    """"""
+    """Returns the extrapolated value for the initial sequence.
+
+    Args:
+        sequences: List of sequences
+
+    Returns:
+        Extrapolated value
+    """
 
     extrapolated_value: int = 0
     for i in reversed(range(0, len(sequences) - 1)):
