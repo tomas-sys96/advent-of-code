@@ -57,28 +57,76 @@ def main() -> None:
 
     pipes: dict[str, dict[Direction, Shift]] = {
         "|": {
-            Direction.NORTH: Shift(line=-1, position=0, direction=Direction.NORTH),
-            Direction.SOUTH: Shift(line=1, position=0, direction=Direction.SOUTH),
+            Direction.NORTH: Shift(
+                line=-1,
+                position=0,
+                direction=Direction.NORTH,
+            ),
+            Direction.SOUTH: Shift(
+                line=1,
+                position=0,
+                direction=Direction.SOUTH,
+            ),
         },
         "-": {
-            Direction.EAST: Shift(line=0, position=1, direction=Direction.EAST),
-            Direction.WEST: Shift(line=0, position=-1, direction=Direction.WEST),
+            Direction.EAST: Shift(
+                line=0,
+                position=1,
+                direction=Direction.EAST,
+            ),
+            Direction.WEST: Shift(
+                line=0,
+                position=-1,
+                direction=Direction.WEST,
+            ),
         },
         "L": {
-            Direction.SOUTH: Shift(line=0, position=1, direction=Direction.EAST),
-            Direction.WEST: Shift(line=-1, position=0, direction=Direction.NORTH),
+            Direction.SOUTH: Shift(
+                line=0,
+                position=1,
+                direction=Direction.EAST,
+            ),
+            Direction.WEST: Shift(
+                line=-1,
+                position=0,
+                direction=Direction.NORTH,
+            ),
         },
         "J": {
-            Direction.SOUTH: Shift(line=0, position=-1, direction=Direction.WEST),
-            Direction.EAST: Shift(line=-1, position=0, direction=Direction.NORTH),
+            Direction.SOUTH: Shift(
+                line=0,
+                position=-1,
+                direction=Direction.WEST,
+            ),
+            Direction.EAST: Shift(
+                line=-1,
+                position=0,
+                direction=Direction.NORTH,
+            ),
         },
         "7": {
-            Direction.NORTH: Shift(line=0, position=-1, direction=Direction.WEST),
-            Direction.EAST: Shift(line=1, position=0, direction=Direction.SOUTH),
+            Direction.NORTH: Shift(
+                line=0,
+                position=-1,
+                direction=Direction.WEST,
+            ),
+            Direction.EAST: Shift(
+                line=1,
+                position=0,
+                direction=Direction.SOUTH,
+            ),
         },
         "F": {
-            Direction.NORTH: Shift(line=0, position=1, direction=Direction.EAST),
-            Direction.WEST: Shift(line=1, position=0, direction=Direction.SOUTH),
+            Direction.NORTH: Shift(
+                line=0,
+                position=1,
+                direction=Direction.EAST,
+            ),
+            Direction.WEST: Shift(
+                line=1,
+                position=0,
+                direction=Direction.SOUTH,
+            ),
         },
     }
 
@@ -108,14 +156,14 @@ def main() -> None:
         )
 
     # Starting directions: west and east
-    for index_step in [-1, 1]:
+    for position_step in [-1, 1]:
         number_of_steps.append(
             find_highest_number_of_steps_along_loop(
                 pipes=pipes,
                 lines=lines,
                 line=starting_line,
-                position=starting_position + index_step,
-                direction=Direction.WEST if index_step == -1 else Direction.EAST,
+                position=starting_position + position_step,
+                direction=Direction.WEST if position_step == -1 else Direction.EAST,
             )
         )
 
