@@ -1,10 +1,10 @@
-from day_10.common import get_loop_positions, Position, get_max_steps
+from day_10.common import get_loop_positions, Position, get_number_of_enclosed_tiles
 
 FILE_PATH: str = "../puzzle_input.txt"
 
 
 def main() -> None:
-    """Prints the solution to Day 10, Part One."""
+    """Prints the solution to Day 10, Part Two."""
 
     with open(file=FILE_PATH, mode="r") as file:
         lines: list[str] = file.readlines()
@@ -23,7 +23,7 @@ def main() -> None:
         starting_char_index=starting_index,
     )
 
-    print(get_max_steps(positions=positions))
+    print(get_number_of_enclosed_tiles(positions=positions))
 
 
 if __name__ == "__main__":
