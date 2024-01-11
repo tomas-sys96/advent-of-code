@@ -9,8 +9,8 @@ def main() -> None:
 
     space_expansion_calculator: SpaceExpansionCalculator = SpaceExpansionCalculator(
         rows=rows,
-        expanded_space_distance=1,
-        expansion_multiplies=False,
+        expanded_space_distance=1000000,
+        expansion_multiplies=True,
     )
     print(space_expansion_calculator.get_distance_between_galaxies())
 
