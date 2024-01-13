@@ -1,6 +1,6 @@
 from day_02.cubes import are_cube_amounts_possible
 
-FILE_PATH: str = "../puzzle_input.txt"
+FILE: str = "../puzzle_input.txt"
 
 max_cube_amount: dict[str, int] = {
     "red": 12,
@@ -13,7 +13,7 @@ def main() -> None:
     """Prints the solution to Day 2, Part One."""
 
     total: int = 0
-    with open(file=FILE_PATH, mode="r") as file:
+    with open(file=FILE, mode="r") as file:
         lines: list[str] = [line.replace("\n", "") for line in file.readlines()]
 
     for line in lines:

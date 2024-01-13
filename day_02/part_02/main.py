@@ -2,14 +2,14 @@ from math import prod
 
 from day_02.cubes import get_min_number_of_cubes_per_color
 
-FILE_PATH: str = "../puzzle_input.txt"
+FILE: str = "../puzzle_input.txt"
 
 
 def main() -> None:
     """Prints the solution to Day 2, Part Two."""
 
     total: int = 0
-    with open(file=FILE_PATH, mode="r") as file:
+    with open(file=FILE, mode="r") as file:
         lines: list[str] = [line.replace("\n", "") for line in file.readlines()]
 
     for line in lines:

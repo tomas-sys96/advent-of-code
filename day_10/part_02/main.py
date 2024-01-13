@@ -1,12 +1,12 @@
 from day_10.common import get_loop_positions, Position, get_number_of_enclosed_tiles
 
-FILE_PATH: str = "../puzzle_input.txt"
+FILE: str = "../puzzle_input.txt"
 
 
 def main() -> None:
     """Prints the solution to Day 10, Part Two."""
 
-    with open(file=FILE_PATH, mode="r") as file:
+    with open(file=FILE, mode="r") as file:
         lines: list[str] = file.readlines()
 
     starting_line: int = 0

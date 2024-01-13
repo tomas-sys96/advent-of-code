@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from day_07.hands import Hand, HandRankGrader
 
-FILE_PATH: str = "../puzzle_input.txt"
+FILE: str = "../puzzle_input.txt"
 
 
 class HandRankGraderP1(HandRankGrader):
@@ -32,7 +32,7 @@ class HandRankGraderP1(HandRankGrader):
 def main() -> None:
     """Prints the solution to Day 7, Part One."""
 
-    with open(file=FILE_PATH, mode="r") as file:
+    with open(file=FILE, mode="r") as file:
         lines: list[str] = file.readlines()
 
     grader: HandRankGraderP1 = HandRankGraderP1(label_order="23456789TJQKA")

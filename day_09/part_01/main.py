@@ -1,6 +1,6 @@
 from day_09.common import get_sequences
 
-FILE_PATH: str = "../puzzle_input.txt"
+FILE: str = "../puzzle_input.txt"
 
 
 def get_extrapolated_value(sequences: list[list[int]]) -> int:
@@ -24,7 +24,7 @@ def main() -> None:
     """Prints the solution to Day 9, Part One."""
 
     total_sum: int = 0
-    with open(file=FILE_PATH, mode="r") as file:
+    with open(file=FILE, mode="r") as file:
         lines: list[str] = file.readlines()
 
     for line in lines:
