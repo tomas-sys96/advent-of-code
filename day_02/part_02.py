@@ -1,6 +1,6 @@
 from math import prod
 
-from day_02.common import get_min_number_of_cubes_per_color
+from common import get_min_number_of_cubes_per_color
 
 FILE: str = "puzzle_input.txt"
 

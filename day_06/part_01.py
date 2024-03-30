@@ -1,6 +1,6 @@
 from math import prod
 
-from day_06.common import Race
+from common import Race
 
 FILE: str = "puzzle_input.txt"
 

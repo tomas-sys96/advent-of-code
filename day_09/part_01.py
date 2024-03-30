@@ -1,4 +1,4 @@
-from day_09.common import get_sequences
+from common import get_sequences
 
 FILE: str = "puzzle_input.txt"
 

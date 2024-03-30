@@ -1,4 +1,4 @@
-from day_01.common import get_first_digit
+from common import get_first_digit
 
 FILE: str = "puzzle_input.txt"
 

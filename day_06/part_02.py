@@ -1,5 +1,6 @@
-from day_06.common import Race
 from math import sqrt, ceil, floor
+
+from common import Race
 
 FILE: str = "puzzle_input.txt"
 

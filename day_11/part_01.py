@@ -1,4 +1,4 @@
-from day_11.common import SpaceExpansionCalculator
+from common import SpaceExpansionCalculator
 
 FILE: str = "puzzle_input.txt"
 

@@ -1,4 +1,4 @@
-from day_04.common import separate_numbers
+from common import separate_numbers
 
 FILE: str = "puzzle_input.txt"
 

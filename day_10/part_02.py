@@ -1,4 +1,4 @@
-from day_10.common import get_loop_positions, Position, get_number_of_enclosed_tiles
+from common import get_loop_positions, Position, get_number_of_enclosed_tiles
 
 FILE: str = "puzzle_input.txt"
 

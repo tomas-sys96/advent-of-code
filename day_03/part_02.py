@@ -1,6 +1,6 @@
 from typing import Optional
 
-from day_03.common import get_adjacent_lines, Number, SymbolDataStorage, SymbolDetector, Symbol
+from common import get_adjacent_lines, Number, SymbolDataStorage, SymbolDetector, Symbol
 
 FILE: str = "puzzle_input.txt"
 

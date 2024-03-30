@@ -1,4 +1,4 @@
-from day_02.common import are_cube_amounts_possible
+from common import are_cube_amounts_possible
 
 FILE: str = "puzzle_input.txt"
 

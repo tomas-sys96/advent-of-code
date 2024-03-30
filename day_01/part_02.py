@@ -1,4 +1,4 @@
-from day_01.common import get_digits_on_line, get_calibration_value
+from common import get_digits_on_line, get_calibration_value
 
 FILE: str = "puzzle_input.txt"
 

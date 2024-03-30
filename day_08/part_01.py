@@ -1,4 +1,4 @@
-from day_08.common import get_nodes, get_steps_to_target_node
+from common import get_nodes, get_steps_to_target_node
 
 FILE: str = "puzzle_input.txt"
 

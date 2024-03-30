@@ -1,4 +1,4 @@
-from day_10.common import get_loop_positions, Position, get_max_steps
+from common import get_loop_positions, Position, get_max_steps
 
 FILE: str = "puzzle_input.txt"
 

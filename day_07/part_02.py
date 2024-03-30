@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from day_07.common import Hand, HandRankGrader
+from common import Hand, HandRankGrader
 
 FILE: str = "puzzle_input.txt"
 

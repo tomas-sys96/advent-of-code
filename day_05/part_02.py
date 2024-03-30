@@ -1,6 +1,6 @@
 from math import inf
 
-from day_05.common import get_maps, ConversionMap, LowestLocationCalculator
+from common import get_maps, ConversionMap, LowestLocationCalculator
 
 FILE: str = "puzzle_input.txt"
 
